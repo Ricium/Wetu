@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web;
 
 namespace Wetu_GUI.Models
 {
@@ -63,5 +64,55 @@ namespace Wetu_GUI.Models
         [Display(Name = "Confirm password")]
         [System.Web.Mvc.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class AccountRepository
+    {
+        public void SetUserLogin(string Username)
+        {
+            List<string> Permissions = SplitRoles(Username, "p_");
+            List<string> Companies = SplitRoles(Username, "u_");
+
+            HttpContext.Current.Session["Username"] = Username;
+            HttpContext.Current.Session["Permissions"] = Permissions;
+            HttpContext.Current.Session["Companies"] = Companies;
+        }
+
+        private List<string> SplitRoles(string Username, string split_char)
+        {
+            List<string> Role_Split = new List<string>();
+
+            string[] roles = Roles.GetRolesForUser(Username);
+
+            foreach (string role in roles)
+            {
+                if (role.StartsWith(split_char))
+                {
+                    Role_Split.Add(role.Substring(2));
+                }
+            }
+
+            return Role_Split;
+        }
+
+        public List<string> GetAllSplitRoles(string split_char)
+        {
+            List<string> Role_Split = new List<string>();
+
+            string[] roles = Roles.GetAllRoles();
+
+            foreach (string role in roles)
+            {
+                if (role.StartsWith(split_char))
+                {
+                    Role_Split.Add(role);
+                }
+            }
+
+            Role_Split.Sort();
+
+            return Role_Split;
+        }
+
     }
 }

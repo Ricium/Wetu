@@ -11,9 +11,7 @@ namespace Wetu_GUI.Controllers
 {
     public class AccountController : Controller
     {
-
-        //
-        // GET: /Account/LogOn
+        AccountRepository Account_Rep = new AccountRepository();
 
         public ActionResult LogOn()
         {
@@ -30,6 +28,8 @@ namespace Wetu_GUI.Controllers
             {
                 if (Membership.ValidateUser(model.UserName, model.Password))
                 {
+                    Account_Rep.SetUserLogin(model.UserName);
+
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
@@ -66,6 +66,8 @@ namespace Wetu_GUI.Controllers
 
         public ActionResult Register()
         {
+            ViewBag.Permissions = Account_Rep.GetAllSplitRoles("p_");
+            ViewBag.Companies = Account_Rep.GetAllSplitRoles("u_");
             return View();
         }
 
@@ -73,7 +75,7 @@ namespace Wetu_GUI.Controllers
         // POST: /Account/Register
 
         [HttpPost]
-        public ActionResult Register(RegisterModel model)
+        public ActionResult Register(RegisterModel model, string[] Companies, string[] Permissions)
         {
             if (ModelState.IsValid)
             {
@@ -83,6 +85,8 @@ namespace Wetu_GUI.Controllers
 
                 if (createStatus == MembershipCreateStatus.Success)
                 {
+                    Roles.AddUserToRoles(model.UserName, Companies);
+                    Roles.AddUserToRoles(model.UserName, Permissions);
                     FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
                     return RedirectToAction("Index", "Home");
                 }
