@@ -1,0 +1,59 @@
+void setD()
+{
+    char * rc;                      // Position of return char
+    int rcs[12];                    // Positions of return chars in databuf
+    int count = -1;                 // Return char counter
+    int loop;
+    char sub[65];
+    char * ch;                      // Position of first " from rc
+    
+    int start;
+    int end;
+    
+    
+    // Find the return chars in buffer
+    rc=strchr(databuf,'\r');
+    while (rc!=NULL)
+    {
+        count++;
+        rcs[count] = rc-databuf+1;
+        rc=strchr(rc+1,'\r');
+        
+        if(count >= 12)
+        {
+            rc = NULL;
+        }
+    }
+    
+    // For each return char position, find first " in substring
+    for(loop = 0; loop < count-1; loop++)
+    {
+        if((rcs[loop] != 0) && (rcs[loop+1] != 0))
+        {
+            datacount++;
+            
+            if(datacount >= 10)
+            {
+                datacount = 0;
+            }
+            
+            strncpy(sub, databuf+rcs[loop], rcs[loop+1]-rcs[loop]);
+            
+            
+            // Find " in sub
+            ch = strchr(sub, '"');
+                
+            if(ch != NULL)
+            {
+                start = ch-sub+1;
+                ch=strchr(ch+1,'"');
+                end = ch-sub;
+                
+                strncpy(data[datacount], sub+start, end-start+6);
+                data[datacount][end-start+6] = '\r';
+                data[datacount][end-start+7] = '\n';
+            }             
+        }        
+    }
+    
+}
