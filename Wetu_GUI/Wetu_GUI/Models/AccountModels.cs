@@ -66,6 +66,13 @@ namespace Wetu_GUI.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class RegisterCompanyModel
+    {
+        [Required]
+        [Display(Name = "Company Name")]
+        public string CompanyName { get; set; }
+    }
+
     public class AccountRepository
     {
         public void SetUserLogin(string Username)
@@ -110,6 +117,23 @@ namespace Wetu_GUI.Models
             }
 
             Role_Split.Sort();
+
+            return Role_Split;
+        }
+
+        public List<string> GetUserRoles(string Username, string split_char)
+        {
+            List<string> Role_Split = new List<string>();
+
+            string[] roles = Roles.GetRolesForUser(Username);
+
+            foreach (string role in roles)
+            {
+                if (role.StartsWith(split_char))
+                {
+                    Role_Split.Add(role);
+                }
+            }
 
             return Role_Split;
         }

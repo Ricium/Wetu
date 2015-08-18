@@ -243,12 +243,12 @@ table th {
 
 nav, 
 #menucontainer {
-    margin-top: 40px;
+    display: block;
 }
 
 div#title {
     display: block;
-    float: left;
+    margin-top:20px;
     text-align: left;
 }
 

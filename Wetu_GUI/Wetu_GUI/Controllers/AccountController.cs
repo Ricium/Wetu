@@ -64,16 +64,43 @@ namespace Wetu_GUI.Controllers
         //
         // GET: /Account/Register
 
-        public ActionResult Register()
+        public ActionResult RegisterCompany()
         {
-            ViewBag.Permissions = Account_Rep.GetAllSplitRoles("p_");
-            ViewBag.Companies = Account_Rep.GetAllSplitRoles("u_");
             return View();
         }
 
         //
         // POST: /Account/Register
 
+        [HttpPost]
+        public ActionResult RegisterCompany(RegisterCompanyModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Attempt to register the comapny
+                string rolename = "u_" + model.CompanyName;
+                Roles.CreateRole(rolename);
+                return RedirectToAction("Index", "Home");
+            }
+       
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [Authorize]
+        public ActionResult Register()
+        {
+            ViewBag.Permissions = Account_Rep.GetAllSplitRoles("p_");
+            
+            ViewBag.Companies = Account_Rep.GetUserRoles(User.Identity.Name, "u_");
+            return View();
+        }
+
+        //
+        // POST: /Account/Register
+
+        [Authorize]
         [HttpPost]
         public ActionResult Register(RegisterModel model, string[] Companies, string[] Permissions)
         {
