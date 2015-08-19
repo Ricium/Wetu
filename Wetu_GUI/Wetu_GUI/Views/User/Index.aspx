@@ -4,6 +4,10 @@
     User Management
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+    - User Management
+</asp:Content>
+
 <asp:Content ID="loginContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2>Users</h2>
    

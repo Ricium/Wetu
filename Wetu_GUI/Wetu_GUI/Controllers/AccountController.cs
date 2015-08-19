@@ -39,7 +39,7 @@ namespace Wetu_GUI.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Home", "Home");
                     }
                 }
                 else
@@ -128,7 +128,9 @@ namespace Wetu_GUI.Controllers
                     newUser.UserId = secRep.GetUserId(model.UserName);
                     newUser = secRep.AddUser(newUser);
 
-                    return RedirectToAction("Index", "Home");
+                    Account_Rep.SetUserLogin(model.UserName);
+
+                    return RedirectToAction("Home", "Home");
                 }
                 else
                 {
@@ -173,7 +175,7 @@ namespace Wetu_GUI.Controllers
                     newUser.UserId = secRep.GetUserId(model.UserName);
                     newUser = secRep.AddUser(newUser);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Home", "Home");
                 }
                 else
                 {

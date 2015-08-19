@@ -19,5 +19,12 @@ namespace Wetu_GUI.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        [AutoLogOffActionFilter]
+        public ActionResult Home()
+        {
+            return View();
+        }
     }
 }

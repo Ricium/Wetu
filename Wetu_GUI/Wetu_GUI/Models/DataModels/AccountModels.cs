@@ -108,6 +108,7 @@ namespace Wetu_GUI.Models
             HttpContext.Current.Session["Permissions"] = Permissions;
             HttpContext.Current.Session["Companies"] = Companies;
             HttpContext.Current.Session["CompanyIds"] = GetCompanyIds(Companies);
+            HttpContext.Current.Session["UserNo"] = GetUserNo(Username);
         }
 
         private List<string> SplitRoles(string Username, string split_char)
@@ -174,6 +175,12 @@ namespace Wetu_GUI.Models
             }
 
             return ReturnList;
+        }
+
+        public int GetUserNo(string Username)
+        {
+            SecurityRepository secRep = new SecurityRepository();
+            return secRep.GetUserNo(Username);
         }
 
     }
