@@ -21,13 +21,14 @@
         <section id="main">
             <asp:ContentPlaceHolder ID="MainContent" runat="server" />
             <footer>
+                <p>Copyright of R.M. Lombard 10119982</p>
             </footer>
         </section>
     </div>
 
     <%= Html.Telerik().StyleSheetRegistrar()
                  .DefaultGroup(group => group.Add("telerik.common.min.css")
-                 .Add("telerik.office2010silver.min.css"))
+                 .Add("telerik.Office2010Blue.min.css"))
     %>
     <%= Html.Telerik().ScriptRegistrar() %>
 </body>

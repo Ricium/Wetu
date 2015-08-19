@@ -11,7 +11,8 @@ namespace Wetu_GUI.Controllers
 {
     public class AccountController : Controller
     {
-        AccountRepository Account_Rep = new AccountRepository();
+        private AccountRepository Account_Rep = new AccountRepository();
+        private SecurityRepository secRep = new SecurityRepository();
 
         public ActionResult LogOn()
         {
@@ -80,9 +81,60 @@ namespace Wetu_GUI.Controllers
                 // Attempt to register the comapny
                 string rolename = "u_" + model.CompanyName;
                 Roles.CreateRole(rolename);
-                return RedirectToAction("Index", "Home");
+
+                // Add Company to Database
+                Company comp = new Company();
+                comp.Name = model.CompanyName;
+                comp.RoleId = secRep.GetRoleId(rolename);
+                comp.Removed = false;
+                comp = secRep.AddCompany(comp);
+
+                RegisterUserModel userNew = new RegisterUserModel();
+                userNew.CompanyRole = rolename;
+
+                return RedirectToAction("RegisterUser", "Account", new { CompanyName = model.CompanyName});
             }
        
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public ActionResult RegisterUser(string CompanyName)
+        {
+            ViewBag.Permissions = Account_Rep.GetAllSplitRoles("p_");
+            List<string> companies = new List<string>();
+            companies.Add("u_" + CompanyName);
+            ViewBag.Companies = companies;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult RegisterUser(RegisterUserModel model, string[] Companies, string[] Permissions)
+        {
+            if (ModelState.IsValid)
+            {
+                // Attempt to register the user
+                MembershipCreateStatus createStatus;
+                Membership.CreateUser(model.UserName, model.Password, model.Email, null, null, true, null, out createStatus);
+
+                if (createStatus == MembershipCreateStatus.Success)
+                {
+                    Roles.AddUserToRoles(model.UserName, Companies);
+                    Roles.AddUserToRoles(model.UserName, Permissions);
+                    FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
+                    User newUser = new User();
+                    newUser.Username = model.UserName;
+                    newUser.UserId = secRep.GetUserId(model.UserName);
+                    newUser = secRep.AddUser(newUser);
+
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", ErrorCodeToString(createStatus));
+                }
+            }
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -114,7 +166,13 @@ namespace Wetu_GUI.Controllers
                 {
                     Roles.AddUserToRoles(model.UserName, Companies);
                     Roles.AddUserToRoles(model.UserName, Permissions);
-                    FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
+                    //FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
+
+                    User newUser = new User();
+                    newUser.Username = model.UserName;
+                    newUser.UserId = secRep.GetUserId(model.UserName);
+                    newUser = secRep.AddUser(newUser);
+
                     return RedirectToAction("Index", "Home");
                 }
                 else

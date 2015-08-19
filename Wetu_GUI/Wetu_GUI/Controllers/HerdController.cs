@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
+using System.Web.Security;
 using Wetu_GUI.Models;
 
 namespace Wetu_GUI.Controllers
 {
-    
-    public class HomeController : Controller
+    public class HerdController : Controller
     {
+        [Authorize]
+        [AutoLogOffActionFilter]
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult About()
-        {
-            return View();
-        }
     }
 }

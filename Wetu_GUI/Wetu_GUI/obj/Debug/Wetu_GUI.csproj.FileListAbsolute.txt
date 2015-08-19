@@ -41,6 +41,6 @@ C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\System.Web.Razor.xml
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\System.Web.WebPages.xml
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\System.Web.WebPages.Deployment.xml
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\System.Web.WebPages.Razor.xml
-C:\dev\Wetu\Wetu_GUI\Wetu_GUI\obj\Debug\Wetu_GUI.csprojResolveAssemblyReference.cache
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\obj\Debug\Wetu_GUI.dll
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\obj\Debug\Wetu_GUI.pdb
+C:\dev\Wetu\Wetu_GUI\Wetu_GUI\obj\Debug\Wetu_GUI.csprojResolveAssemblyReference.cache

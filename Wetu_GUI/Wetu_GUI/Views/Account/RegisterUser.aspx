@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Wetu_GUI.Models.RegisterModel>" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<Wetu_GUI.Models.RegisterUserModel>" %>
 
 <asp:Content ID="registerTitle" ContentPlaceHolderID="TitleContent" runat="server">
     Register User
@@ -24,7 +24,6 @@
                     <td>
                         <fieldset>
                             <legend>Account Information</legend>
-                
                             <div class="editor-label">
                                 <%: Html.LabelFor(m => m.UserName) %>
                             </div>

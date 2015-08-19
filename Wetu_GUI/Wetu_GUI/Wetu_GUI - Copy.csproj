@@ -8,7 +8,7 @@
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F719EE96-B213-482A-98A1-CF12099B4158}</ProjectGuid>
-    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Wetu_GUI</RootNamespace>
@@ -292,8 +292,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UploadLocalization.zh-CN.resx</DependentUpon>
     </Compile>
-    <Compile Include="Controllers\DeviceController.cs" />
-    <Compile Include="Controllers\HerdController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -304,13 +302,9 @@
     <Compile Include="Models\DataModels\AccountModels.cs" />
     <Compile Include="Models\DataModels\AnimalType.cs" />
     <Compile Include="Models\DataModels\BirthType.cs" />
-    <Compile Include="Models\DataModels\Company.cs" />
-    <Compile Include="Models\DataModels\Device.cs" />
-    <Compile Include="Models\DataModels\User.cs" />
     <Compile Include="Models\Repositories\BirthTypeRepository.cs" />
     <Compile Include="Models\Repositories\AnimalTypeRepository.cs" />
     <Compile Include="Models\Repositories\CommonRepository.cs" />
-    <Compile Include="Models\Repositories\SecurityRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -609,22 +603,13 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Views\Account\RegisterCompany.aspx" />
-    <Content Include="Views\Account\RegisterUser.aspx" />
-    <Content Include="Views\Device\Index.aspx" />
-    <Content Include="Views\Herd\Index.aspx" />
-    <Content Include="Views\Maintenance\Index.aspx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
-    <Content Include="Views\Maintenance\_BirthTypes.ascx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
-    <Content Include="Views\Maintenance\_AnimalTypes.ascx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
+    <Content Include="Views\Maintenance\Index.aspx" />
+    <Content Include="Views\Maintenance\_BirthTypes.ascx" />
+    <Content Include="Views\Maintenance\_AnimalTypes.ascx" />
     <Content Include="Views\Shared\EditorTemplates\BirthType.aspx" />
     <Content Include="Views\Shared\EditorTemplates\AnimalType.aspx" />
     <Content Include="Views\Shared\MainMenu.ascx" />
-    <Content Include="Views\User\Index.aspx" />
+    <Content Include="Views\User\Users.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -901,7 +886,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51664/</IISUrl>
+          <IISUrl>http://localhost:51287/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

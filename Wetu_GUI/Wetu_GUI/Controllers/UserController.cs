@@ -9,9 +9,11 @@ using Wetu_GUI.Models;
 
 namespace Wetu_GUI.Controllers
 {
+    [Authorize]
+    [AutoLogOffActionFilter]
     public class UserController : Controller
     {
-        public ActionResult Users()
+        public ActionResult Index()
         {
             return View();
         }

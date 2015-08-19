@@ -16,24 +16,7 @@ namespace Wetu_GUI
 
             foreach (ConnectionStringSettings item in ConfigurationManager.ConnectionStrings)
             {
-                if (item.Name.Equals("SparConnect"))
-                {
-                    strConn = item.ConnectionString;
-                }
-            }
-
-            SqlConnection con = new SqlConnection(strConn);
-            return con;
-        }
-
-        public SqlConnection AuthConn()
-        {
-            //Defines which SQL-server to connect to, which database, and which user
-            string strConn = "";
-
-            foreach (ConnectionStringSettings item in ConfigurationManager.ConnectionStrings)
-            {
-                if (item.Name.Equals("SparConnect"))
+                if (item.Name.Equals("ApplicationServices"))
                 {
                     strConn = item.ConnectionString;
                 }
