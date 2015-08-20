@@ -40,12 +40,27 @@ namespace Wetu_GUI
         public static string DeleteBirthType = "usp_l_BirthTypesDelete";
         #endregion
 
+        #region Other
+        public static string GetSexes = "usp_l_SexesSelectAll";
+        #endregion
+
         #region Device
         public static string GetDevice = "usp_t_DevicesSelect";
         public static string GetDevices = "usp_t_DevicesSelectAll";
         public static string InsertDevice = "usp_t_DevicesInsert";
         public static string UpdateDevice = "usp_t_DevicesUpdate";
         public static string DeleteDevice = "usp_t_DevicesDelete";
+        public static string GetDeviceDropDown = "usp_t_DevicesSelectDropDown";
+        #endregion
+
+        #region Animal
+        public static string GetAnimal = "usp_t_AnimalsSelect";
+        public static string GetAnimals = "usp_t_AnimalsSelectAll";
+        public static string InsertAnimal = "usp_t_AnimalsInsert";
+        public static string UpdateAnimal = "usp_t_AnimalsUpdate";
+        public static string DeleteAnimal = "usp_t_AnimalsDelete";
+        public static string LinkAnimalDevice = "usp_a_DeviceLinksInsert";
+        public static string UnlinkAnimalDevice = "usp_a_DeviceLinksDelete";
         #endregion
     }
 }

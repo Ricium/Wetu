@@ -9,7 +9,7 @@
     <title>Species</title>
 </head>
 <body>
-    <%: Html.ValidationSummary(false) %>
+    <%: Html.ValidationSummary(false, "Please fix the following errors:")  %>
     <%: Html.HiddenFor(m => m.DeviceId) %>
     <%: Html.HiddenFor(m => m.CreatedDate) %>
     
@@ -18,6 +18,7 @@
      </div>
      <div class="editor-field">
          <%: Html.TextBoxFor(m => m.Address) %>
+         <br />
          <%: Html.ValidationMessageFor(m => m.Address) %>
      </div>
 
@@ -26,8 +27,9 @@
      </div>
      <div class="editor-field">
          <%: Html.Telerik().DropDownListFor(m => m.CompanyId)
-                            .BindTo((IEnumerable<SelectListItem>) ViewData["Companies"])
+                            .DataBinding(db => db.Ajax().Select("_GetCompanyList", "DropDown"))
                             .HtmlAttributes(new { style = "width: 350px" })%>
+         <br />
          <%: Html.ValidationMessageFor(m => m.CompanyId) %>
      </div>
     <br />

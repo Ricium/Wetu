@@ -4,23 +4,21 @@
     Register Company
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+    - Company Registration
+</asp:Content>
+
 <asp:Content ID="registerContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2>Create a New Company</h2>
-    <p>
-        Use the form below to create a new account. 
-    </p>
-    <p>
-        Passwords are required to be a minimum of <%: Membership.MinRequiredPasswordLength %> characters in length.
-    </p>
 
     <script src="<%: Url.Content("~/Scripts/jquery.validate.min.js") %>" type="text/javascript"></script>
     <script src="<%: Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js") %>" type="text/javascript"></script>
 
     <% using (Html.BeginForm()) { %>
-        <%: Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again.") %>
+        <%: Html.ValidationSummary(true, "Company creation was unsuccessful. Please correct the errors and try again.") %>
         <div>
                         <fieldset>
-                            <legend>Account Information</legend>
+                            <legend>Company Information</legend>
                 
                             <div class="editor-label">
                                 <%: Html.LabelFor(m => m.CompanyName) %>
@@ -32,11 +30,10 @@
                 
                            
                         </fieldset>
-                    </td>
                    
             
                 <p>
-                    <input type="submit" value="Register" />
+                    <input type="submit" value="Register" class="t-button" />
                 </p>
         </div>
     <% } %>

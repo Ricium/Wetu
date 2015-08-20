@@ -4,6 +4,10 @@
     Register User
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+    - User Registration
+</asp:Content>
+
 <asp:Content ID="registerContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2>Create a New Account</h2>
     <p>
@@ -92,7 +96,7 @@
             </table>
             
                 <p>
-                    <input type="submit" value="Register" />
+                    <input type="submit" value="Register" class="t-button" />
                 </p>
         </div>
     <% } %>

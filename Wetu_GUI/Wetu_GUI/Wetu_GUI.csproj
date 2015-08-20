@@ -293,6 +293,7 @@
       <DependentUpon>UploadLocalization.zh-CN.resx</DependentUpon>
     </Compile>
     <Compile Include="Controllers\DeviceController.cs" />
+    <Compile Include="Controllers\DropDownController.cs" />
     <Compile Include="Controllers\HerdController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -302,11 +303,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DataModels\AccountModels.cs" />
+    <Compile Include="Models\DataModels\Animal.cs" />
     <Compile Include="Models\DataModels\AnimalType.cs" />
     <Compile Include="Models\DataModels\BirthType.cs" />
     <Compile Include="Models\DataModels\Company.cs" />
     <Compile Include="Models\DataModels\Device.cs" />
     <Compile Include="Models\DataModels\User.cs" />
+    <Compile Include="Models\Repositories\AccountRepository.cs" />
+    <Compile Include="Models\Repositories\AnimalRepository.cs" />
     <Compile Include="Models\Repositories\BirthTypeRepository.cs" />
     <Compile Include="Models\Repositories\AnimalTypeRepository.cs" />
     <Compile Include="Models\Repositories\CommonRepository.cs" />
@@ -624,6 +628,7 @@
     <Content Include="Views\Maintenance\_AnimalTypes.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="Views\Shared\EditorTemplates\Animal.aspx" />
     <Content Include="Views\Shared\EditorTemplates\BirthType.aspx" />
     <Content Include="Views\Shared\EditorTemplates\AnimalType.aspx" />
     <Content Include="Views\Shared\EditorTemplates\Device.aspx" />

@@ -12,6 +12,8 @@ namespace Wetu_GUI.Models
         public int BirthTypeId { get; set; }
 
         [DisplayName("Birth Type")]
+        [Required(ErrorMessage = "Please enter {0}")]
+        [StringLength(50, ErrorMessage = "The {0} may not be longer than {1} characters.")]
         public string Description { get; set; }
     }
 }

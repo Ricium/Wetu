@@ -4,6 +4,10 @@
     Log On
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
+    - Log On 
+</asp:Content>
+
 <asp:Content ID="loginContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2>Log On</h2>
    
@@ -38,7 +42,7 @@
                 </div>
                 
                 <p>
-                    <input type="submit" value="Log On" />
+                    <input type="submit" value="Log On" class="t-button" />
                 </p>
             </fieldset>
         </div>
