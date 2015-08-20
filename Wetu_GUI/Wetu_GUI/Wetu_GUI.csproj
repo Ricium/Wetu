@@ -295,6 +295,7 @@
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\DropDownController.cs" />
     <Compile Include="Controllers\HerdController.cs" />
+    <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Models\DataModels\BirthType.cs" />
     <Compile Include="Models\DataModels\Company.cs" />
     <Compile Include="Models\DataModels\Device.cs" />
+    <Compile Include="Models\DataModels\ProximityLog.cs" />
     <Compile Include="Models\DataModels\User.cs" />
     <Compile Include="Models\Repositories\AccountRepository.cs" />
     <Compile Include="Models\Repositories\AnimalRepository.cs" />
@@ -315,6 +317,7 @@
     <Compile Include="Models\Repositories\AnimalTypeRepository.cs" />
     <Compile Include="Models\Repositories\CommonRepository.cs" />
     <Compile Include="Models\Repositories\DeviceRepository.cs" />
+    <Compile Include="Models\Repositories\LoggingRepository.cs" />
     <Compile Include="Models\Repositories\SecurityRepository.cs" />
     <Compile Include="Models\ViewModels\DeviceView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

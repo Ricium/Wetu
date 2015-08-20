@@ -62,5 +62,22 @@ namespace Wetu_GUI
         public static string LinkAnimalDevice = "usp_a_DeviceLinksInsert";
         public static string UnlinkAnimalDevice = "usp_a_DeviceLinksDelete";
         #endregion
+
+        #region Logging
+        public static string GetDeviceIdFromAddress = "usp_t_DeviceSelectFromAddress";
+        public static string GetAnimalIdFromDevice = "usp_t_AnimalSelectFromDeviceId";
+        public static string InsertProximityLog = "usp_t_ProximityInsert";
+        #endregion
+
+        #region Web Return Codes
+        public static string Success = "1";
+        public static string Error_DeviceReceived = "2";
+        public static string Error_DeviceConnected = "3";
+        public static string Error_Parameters = "4";
+        public static string Error_DBFail = "5";
+        public static string Error_DeviceReceivedNotConnectedToAnimal = "6";
+        public static string Error_DeviceConnectedNotConnectedToAnimal = "7";
+        public static string Error = "-1";
+        #endregion
     }
 }
