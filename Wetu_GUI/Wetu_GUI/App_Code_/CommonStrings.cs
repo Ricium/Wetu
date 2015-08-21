@@ -67,6 +67,7 @@ namespace Wetu_GUI
         public static string GetDeviceIdFromAddress = "usp_t_DeviceSelectFromAddress";
         public static string GetAnimalIdFromDevice = "usp_t_AnimalSelectFromDeviceId";
         public static string InsertProximityLog = "usp_t_ProximityInsert";
+        public static string GetProximityLog = "usp_t_ProximitySelectAll";
         #endregion
 
         #region Web Return Codes

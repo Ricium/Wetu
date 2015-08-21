@@ -626,6 +626,7 @@
     <Content Include="Views\Device\Index.aspx" />
     <Content Include="Views\Herd\Index.aspx" />
     <Content Include="Views\Home\Home.aspx" />
+    <Content Include="Views\Log\Index.aspx" />
     <Content Include="Views\Maintenance\Index.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>

@@ -1,4 +1,10 @@
 from datetime import datetime               # Used for connection times
+
+def strip_non_ascii(string):
+    ''' Returns the string without non ASCII characters'''
+    stripped = (c for c in string if 48 <= ord(c) <= 57 or 65 <= ord(c) <= 90 or 97 <= ord(c) <= 122)
+    return ''.join(stripped)
+
 # Class for WiFi Nodes
 class AnimalNode:
     def __init__(self, _name, _time, _signal):
@@ -86,13 +92,18 @@ class DeviceNode:
                 end_index = line.find('"', start_index)   
                 if not end_index == -1:
                     text = line[start_index:end_index+6]
-                    name = text[0:text.find('"')]
+                    name = strip_non_ascii(text[0:text.find('"')])
                     signal = text[text.find('"')+2:]
+
+                    if signal.endswith(',"'):
+                        signal = signal[:len(signal)-2]
+                        
                     if signal.endswith(','):
                         signal = signal[:len(signal)-1]
-
-                    module = AnimalNode(name, datetime.now(), signal)
-                    connections.append(module)
+                    
+                    if int(signal) >= -40:
+                        module = AnimalNode(name, datetime.now(), signal)
+                        connections.append(module)
         self.clear_buffer()
         return connections
 

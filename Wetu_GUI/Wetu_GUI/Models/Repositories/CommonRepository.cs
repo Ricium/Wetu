@@ -186,6 +186,62 @@ namespace Wetu_GUI.Models
 
             return ReturnObject;
         }
+
+        public List<ProximityLog> GetProximityLog()
+        {
+            List<ProximityLog> ReturnObject = new List<ProximityLog>();
+            ProximityLog ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetProximityLog + " @Companies", con))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("Item", typeof(int));
+
+                    foreach (int item in companies)
+                        table.Rows.Add(item);
+
+                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                    pList.TypeName = "dbo.IntList";
+                    pList.Value = table;
+
+                    cmd.Parameters.Add(pList);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            ins = new ProximityLog();
+                            ins.ProximityId = Convert.ToInt32(drI["ProximityId"]);
+                            ins.AnimalConnectedTo = Convert.ToInt32(drI["AnimalConnectedTo"]);
+                            ins.AnimalInProximity = Convert.ToInt32(drI["AnimalInProximity"]);
+                            ins.DeviceConnectedTo = Convert.ToInt32(drI["DeviceConnectedTo"]);
+                            ins.DeviceInProximity = Convert.ToInt32(drI["DeviceInProximity"]);
+                            ins.LogDate = Convert.ToDateTime(drI["LogDate"]);
+                            ins.ProximityEnded = Convert.ToDateTime(drI["ProximityEnded"]);
+                            ins.ProximityStarted = Convert.ToDateTime(drI["ProximityStarted"]);
+                            ins._AnimalConnectedTo = drI["AnimalA"].ToString();
+                            ins._AnimalInProximity = drI["AnimalB"].ToString();
+                            ins._Company = drI["Company"].ToString();
+                            ins._DeviceConnectedTo = drI["DeviceA"].ToString();
+                            ins._DeviceInProximity = drI["DeviceB"].ToString();
+
+                            ins.SecondsConnected = Math.Round((ins.ProximityEnded - ins.ProximityStarted).TotalSeconds,2);
+                            ReturnObject.Add(ins);
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
         #endregion
 
         #region Drop Down Lists

@@ -11,6 +11,14 @@ namespace Wetu_GUI.Controllers
     public class LogController : Controller
     {
         private LoggingRepository logRep = new LoggingRepository();
+        private CommonRepository commonRep = new CommonRepository();
+
+        [GridAction]
+        public JsonResult _ListProximityLog()
+        {
+            List<ProximityLog> list = commonRep.GetProximityLog();
+            return Json(new GridModel(list));
+        }
 
         public ActionResult Index()
         {

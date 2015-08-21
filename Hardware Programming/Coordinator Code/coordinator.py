@@ -10,7 +10,8 @@ from Node_Objects   import AnimalNode, DeviceNode, Nodes    # Node Structures
 nodes = Nodes()                                             # Node object - Will contain all network data
 port = 'COM4'                                               # Serial Port of XBee
 baudrate = 19200                                            # Required Baudrate
-url = 'http://127.0.0.1/project/poster.php'                 # URL to POST data to
+localport = 'http://localhost:51664/'
+url = localport + 'Log/LogProximity'                # URL to POST data to
 
 # Function to start serial connection
 def start_serial(PORT, BAUDRATE):
@@ -18,6 +19,18 @@ def start_serial(PORT, BAUDRATE):
     ser = serial.Serial(PORT,BAUDRATE)    
     print("Connected to: " + ser.portstr)
     return ser
+
+# Function to POST data to Remote Server
+def postdata(URL, DEVICEA, DEVICEB, STARTTIME, ENDTIME):
+    values = {'DeviceReceivedAddress' : DEVICEA,
+              'DeviceConnectedAddress' : DEVICEB,
+              'ConncetionStart': STARTTIME,
+              'ConnectionEnd' : ENDTIME }
+    data = urllib.urlencode(values)
+    req = urllib2.Request(URL, data)
+    response = urllib2.urlopen(req)
+    the_page = response.read()
+    print the_page
 
 # Function to process node
 def process_node(NODE):
@@ -30,13 +43,16 @@ def process_node(NODE):
     # For each lost connection, post the data to the remote server
     for connection in lost_connections:
         try:
+            print NODE.address
+            print connection.name
             # Process data in Thread
-            post_thread = threading.Thread(target=post_data,
-                                           args=(NODE.address, connection.name,
+            post_thread = threading.Thread(target=postdata,
+                                           args=(url,
+                                                 NODE.address,
+                                                 connection.name,
                                                  connection.start_time,
                                                  connection.end_time,
-                                                 connection.strength,
-                                                 url,))
+                                                 ))
             post_thread.start()
         except:
             print "Error: Unable to Start Thread: Post_Thread"
@@ -53,6 +69,8 @@ def post_data(FROM, TO, START, END, STRENGTH,URL):
     response = urllib2.urlopen(req)                     # Open HTTP Request
     the_page = response.read()                          # Return Response
 
+
+
 # Start Serial Connection
 serial_con = start_serial(port, baudrate)
 
@@ -66,7 +84,8 @@ while True:
         response = XB.wait_read_frame()
 
         # Get Source Address of the Response 
-        address = response['source_addr_long'].encode('hex')
+        address_res = response['source_addr_long'].encode('hex')
+        address = address_res[8:].upper()
         print 'Packet Received From: ' + address 
 
         # Check if Device in List
