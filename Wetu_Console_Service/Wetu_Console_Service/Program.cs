@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Configuration;
 using System.Data.SqlClient;
+using System.Net;
+using System.Collections.Specialized;
 
 namespace Wetu_Console_Service
 {
@@ -12,44 +13,43 @@ namespace Wetu_Console_Service
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Adding connection string");
-            string conString = ConfigurationManager.ConnectionStrings["ApplicationServices"].ConnectionString;
-            int DeviceId = -1;
+            Console.WriteLine("Welcome");
+            Setup Service = new Setup();      
 
-            
+            //Service.SendPushBullet("Hey there buddy, welcome to the service");
+            //Service.WriteLog(LogMessages.NOTIFY, EventTypes.Information, EventCategories.NOTIFICATION_EVENT);
 
-            SqlConnection sqlConn = new SqlConnection(conString);
+            List<SocialGroup> SocialGroups = Service.GetSocialGroups();
 
-            using (var con = sqlConn)
+            foreach(SocialGroup group in SocialGroups)
             {
-                Console.WriteLine("Opening Connection");
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec usp_t_DeviceSelectFromAddress @Address", con))
+                Console.WriteLine("Social Group for Animal: " + group.AnimalId.ToString());
+                foreach(int animal in group.AnimalsInGroup)
                 {
-
-                    cmd.Parameters.AddWithValue("@Address", "40BF8A9E");
-
-                    Console.WriteLine("Reading Database");
-                    using (var drI = cmd.ExecuteReader())
-                    {
-                        while (drI.Read())
-                        {
-                            DeviceId = Convert.ToInt32(drI["DeviceId"]);
-                        }
-                    }
-                    Console.WriteLine("Done Reading Database");
+                    Console.WriteLine(animal.ToString());
                 }
             }
 
-            Console.WriteLine("Results Gained: " + DeviceId.ToString());
+            List<SocialGroup> SocialGroupsLast = Service.GetSocialGroupsLast();
+            foreach (SocialGroup group in SocialGroupsLast)
+            {
+                Console.WriteLine("Last Social Group for Animal: " + group.AnimalId.ToString());
+                foreach (int animal in group.AnimalsInGroup)
+                {
+                    Console.WriteLine(animal.ToString());
+                }
+            }
 
+            Console.WriteLine("Animals most likely in Estrous:");
+            List<int> EstrousAnimals = Service.GetEstrousAnimals();
+            foreach (int animal in EstrousAnimals)
+            {
+                Console.WriteLine(animal.ToString());
+            }
 
-            Console.WriteLine("Closing Connection");
-            sqlConn.Close();
-
-            //...Wait
-            Console.ReadKey();
+                //...Wait
+                Console.ReadKey();
+            Service.WriteLog(LogMessages.STOP_SERVICE, EventTypes.Information, EventCategories.SERVICE_EVENT);
         }
     }
 }
