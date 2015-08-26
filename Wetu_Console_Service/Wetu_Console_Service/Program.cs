@@ -21,7 +21,7 @@ namespace Wetu_Console_Service
 
             List<SocialGroup> SocialGroups = Service.GetSocialGroups();
 
-            foreach(SocialGroup group in SocialGroups)
+            /*foreach(SocialGroup group in SocialGroups)
             {
                 Console.WriteLine("Social Group for Animal: " + group.AnimalId.ToString());
                 foreach(int animal in group.AnimalsInGroup)
@@ -38,7 +38,7 @@ namespace Wetu_Console_Service
                 {
                     Console.WriteLine(animal.ToString());
                 }
-            }
+            }*/
 
             Console.WriteLine("Animals most likely in Estrous:");
             List<int> EstrousAnimals = Service.GetEstrousAnimals();

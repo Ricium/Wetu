@@ -80,5 +80,10 @@ namespace Wetu_GUI
         public static string Error_DeviceConnectedNotConnectedToAnimal = "7";
         public static string Error = "-1";
         #endregion
+
+        #region Alternative Selects
+        public static string GetAllUsers = "usp_t_UsersSelectAll";
+        public static string GetUsername = "usp_t_UsersSelect";
+        #endregion
     }
 }

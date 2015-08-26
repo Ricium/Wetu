@@ -437,6 +437,28 @@ namespace Wetu_GUI.Models
             con.Dispose();
         }
 
+        public void LinkAnimalToDeviceSim(Animal ins)
+        {
+            //int ModifiedBy = (int)HttpContext.Current.Session["UserNo"];
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.LinkAnimalDevice;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Parameters.AddWithValue("@DeviceId", ins.DeviceId);
+            cmdI.Parameters.AddWithValue("@AnimalId", ins.AnimalId);
+            cmdI.Parameters.AddWithValue("@IsCurrent", true);
+            cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
+            cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
+            cmdI.ExecuteNonQuery();
+            cmdI.Connection.Close();
+            con.Dispose();
+        }
+
         public void RemoveAnimalLinkedDevice(int AnimalId)
         {
             int ModifiedBy = (int)HttpContext.Current.Session["UserNo"];
@@ -457,5 +479,68 @@ namespace Wetu_GUI.Models
         }
         #endregion
 
+        #region Alternative Selects
+        public List<string> GetAllUserKeys()
+        {
+            List<string> userkeys = new List<string>();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetAllUsers;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    userkeys.Add(drI["UserKey"].ToString());
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+            
+
+            return userkeys;
+        }
+
+        public List<string> GetAllUsernames()
+        {
+            List<string> usernames = new List<string>();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetAllUsers;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    usernames.Add(drI["Username"].ToString());
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+
+
+            return usernames;
+        }
+        #endregion
     }
 }

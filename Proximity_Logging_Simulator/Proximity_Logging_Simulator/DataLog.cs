@@ -1,36 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Proximity_Logging_Simulator
 {
-    public class DataBlocks
+    public class Company
     {
-        public DataBlocks()
+        public Company(int _CompanyId)
         {
-            this.Devices = new List<string>();
-            this.Devices.Add("40BF8A9E");
-            this.Devices.Add("40BF8B3D");
-            this.Devices.Add("40BDBA4F");
-            this.Devices.Add("40C053F6");
-            this.Devices.Add("40BF8A90");
-            this.Devices.Add("40BF8A91");
-            this.Devices.Add("40BF8A92");
-            this.Devices.Add("40BF8A93");
-            this.Devices.Add("40BF8A94");
-            this.Devices.Add("40BF8A95");
-            this.Devices.Add("40BF8A96");
-            this.Devices.Add("40BF8A97");
-            this.Devices.Add("40BF8A98");
-            this.Devices.Add("40BF8A99");
-            this.Devices.Add("40BF8A9A");
-            this.Devices.Add("40BF8A9B");
-            this.Devices.Add("40BF8A9C");
-            this.Devices.Add("40BF8A9D");
-            this.Devices.Add("40BF8A9F");
-            this.Devices.Add("40BF8AA0");
+            this.CompanyId = _CompanyId;
+            GetDevices();
         }
 
         public int GetRandom(int NotEquals)
@@ -49,18 +31,67 @@ namespace Proximity_Logging_Simulator
         public DateTime RandomDateTime()
         {
             Random rnd = new Random();
+            int interval = rnd.Next(0, 8);
+            int amount = rnd.Next(1, 100);
+            int days = rnd.Next(0, 31);
+
+            switch (interval)
+            {
+                case 0: return DateTime.Now.AddSeconds(-1 * amount).AddDays(-1 *days);
+                case 1: return DateTime.Now.AddMinutes(-1 * amount).AddDays(-1* days);
+                case 2: return DateTime.Now.AddHours(-1 * (int)(interval/2)+1);
+                case 3: return DateTime.Now.AddSeconds(-1 * amount);
+                case 4: return DateTime.Now.AddMinutes(-1 * amount);
+                case 5: return DateTime.Now;
+                case 6: return DateTime.Now.AddSeconds(-15);
+                case 7: return DateTime.Now.AddDays(-1 * days);
+                default: return DateTime.Now;
+            }
+        }
+
+        public DateTime RandomDateTime(DateTime Start)
+        {
+            Random rnd = new Random();
             int interval = rnd.Next(0, 3);
             int amount = rnd.Next(1, 100);
 
             switch (interval)
             {
-                case 0: return DateTime.Now.AddSeconds(-1 * amount);
-                case 1: return DateTime.Now.AddMinutes(-1 * amount);
-                case 2: return DateTime.Now.AddHours(-1 * amount);
-                default: return DateTime.Now;
+                case 0: return Start.AddSeconds(amount);
+                case 1: return Start.AddMinutes(amount);
+                case 2: return Start.AddHours((int)(interval / 2) + 1);
+                default: return Start.AddSeconds(10);
+            }
+        }
+
+        public void GetDevices()
+        {
+            this.Devices = new List<string>();
+
+            DatabaseConnection dbConn = new DatabaseConnection();
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec usp_t_DevicesSelectByCompany @CompanyId", con))
+                {
+                    
+
+                    cmd.Parameters.AddWithValue("@CompanyId", this.CompanyId);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            this.Devices.Add(drI["Address"].ToString());
+                        }
+                    }
+                }
             }
         }
 
         public List<string> Devices { get; set; }
+        public int CompanyId { get; set; }
     }
 }

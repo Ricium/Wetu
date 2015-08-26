@@ -110,6 +110,60 @@ namespace Wetu_GUI.Models
             return ins;
         }
 
+        public Animal InsertAnimalSim(Animal ins)
+        {
+            Animal ReturnObject = new Animal();
+            //int ModifiedBy = (int)HttpContext.Current.Session["UserNo"];
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertAnimal;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@AnimalTypeId", 1);
+                cmdI.Parameters.AddWithValue("@SexId", 1);
+                cmdI.Parameters.AddWithValue("@DecriptiveName", ins.DecriptiveName);
+                cmdI.Parameters.AddWithValue("@TagNumber", ins.TagNumber);
+                cmdI.Parameters.AddWithValue("@BirthDate", DateTime.Today);
+                cmdI.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
+                cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
+                cmdI.Parameters.AddWithValue("@CompanyId", ins.CompanyId);
+                cmdI.Parameters.AddWithValue("@Removed", false);
+                ins.AnimalId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
+            }
+
+            return ins;
+        }
+
         public Animal UpdateAnimal(Animal ins)
         {
             int ModifiedBy = (int)HttpContext.Current.Session["UserNo"];

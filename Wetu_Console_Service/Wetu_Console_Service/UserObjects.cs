@@ -192,8 +192,8 @@ namespace Wetu_Console_Service
 
                     using (SqlCommand cmd = new SqlCommand("exec service_GetInteractionsGivenTime @AnimalId, @StartDate, @EndDate", con))
                     {
-                        DateTime StartDate = new DateTime(2015, 8, 25, 12, 0, 0);
-                        DateTime EndDate = new DateTime(2015, 8, 25, 15, 0, 0);
+                        DateTime EndDate = DateTime.Today;
+                        DateTime StartDate = EndDate.AddDays(-3);                        
 
                         cmd.Parameters.AddWithValue("@AnimalId", AnimalId);
                         cmd.Parameters.AddWithValue("@StartDate", StartDate);

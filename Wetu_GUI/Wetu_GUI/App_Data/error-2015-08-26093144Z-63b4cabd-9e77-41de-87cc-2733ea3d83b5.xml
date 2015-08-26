@@ -1,10 +1,10 @@
-﻿<error errorId="3916439d-eb38-4469-b4f5-d824316c6ecc" host="UP880115" type="System.Web.HttpException" message="The controller for path '/__browserLink/requestData/aa9e11d0bd8a4014ac0eaab47cff9a79' was not found or does not implement IController." source="System.Web.Mvc" detail="System.Web.HttpException (0x80004005): The controller for path '/__browserLink/requestData/aa9e11d0bd8a4014ac0eaab47cff9a79' was not found or does not implement IController.&#xD;&#xA;   at System.Web.Mvc.DefaultControllerFactory.GetControllerInstance(RequestContext requestContext, Type controllerType)&#xD;&#xA;   at System.Web.Mvc.DefaultControllerFactory.CreateController(RequestContext requestContext, String controllerName)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.ProcessRequestInit(HttpContextBase httpContext, IController&amp; controller, IControllerFactory&amp; factory)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)&#xD;&#xA;   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()&#xD;&#xA;   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean&amp; completedSynchronously)" time="2015-08-25T10:24:45.5892999Z" statusCode="404">
+﻿<error errorId="63b4cabd-9e77-41de-87cc-2733ea3d83b5" host="UP880115" type="System.Web.HttpException" message="The controller for path '/__browserLink/requestData/3733892122f94b6892ff5a959ab7c47c' was not found or does not implement IController." source="System.Web.Mvc" detail="System.Web.HttpException (0x80004005): The controller for path '/__browserLink/requestData/3733892122f94b6892ff5a959ab7c47c' was not found or does not implement IController.&#xD;&#xA;   at System.Web.Mvc.DefaultControllerFactory.GetControllerInstance(RequestContext requestContext, Type controllerType)&#xD;&#xA;   at System.Web.Mvc.DefaultControllerFactory.CreateController(RequestContext requestContext, String controllerName)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.ProcessRequestInit(HttpContextBase httpContext, IController&amp; controller, IControllerFactory&amp; factory)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)&#xD;&#xA;   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()&#xD;&#xA;   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean&amp; completedSynchronously)" time="2015-08-26T09:31:44.2349625Z" statusCode="404">
   <serverVariables>
     <item name="ALL_HTTP">
-      <value string="HTTP_CONNECTION:keep-alive&#xD;&#xA;HTTP_ACCEPT:application/json, text/javascript, */*; q=0.01&#xD;&#xA;HTTP_ACCEPT_ENCODING:gzip, deflate, sdch&#xD;&#xA;HTTP_ACCEPT_LANGUAGE:en-US,en;q=0.8,af;q=0.6,it;q=0.4&#xD;&#xA;HTTP_HOST:localhost:51664&#xD;&#xA;HTTP_REFERER:http://localhost:51664/&#xD;&#xA;HTTP_USER_AGENT:Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36&#xD;&#xA;HTTP_X_REQUESTED_WITH:XMLHttpRequest&#xD;&#xA;" />
+      <value string="HTTP_CONNECTION:keep-alive&#xD;&#xA;HTTP_ACCEPT:application/json, text/javascript, */*; q=0.01&#xD;&#xA;HTTP_ACCEPT_ENCODING:gzip, deflate, sdch&#xD;&#xA;HTTP_ACCEPT_LANGUAGE:en-US,en;q=0.8,af;q=0.6,it;q=0.4&#xD;&#xA;HTTP_COOKIE:ASP.NET_SessionId=uo4nb1qgpnomho0po1ibcfjh&#xD;&#xA;HTTP_HOST:localhost:51664&#xD;&#xA;HTTP_REFERER:http://localhost:51664/&#xD;&#xA;HTTP_USER_AGENT:Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36&#xD;&#xA;HTTP_X_REQUESTED_WITH:XMLHttpRequest&#xD;&#xA;" />
     </item>
     <item name="ALL_RAW">
-      <value string="Connection: keep-alive&#xD;&#xA;Accept: application/json, text/javascript, */*; q=0.01&#xD;&#xA;Accept-Encoding: gzip, deflate, sdch&#xD;&#xA;Accept-Language: en-US,en;q=0.8,af;q=0.6,it;q=0.4&#xD;&#xA;Host: localhost:51664&#xD;&#xA;Referer: http://localhost:51664/&#xD;&#xA;User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36&#xD;&#xA;X-Requested-With: XMLHttpRequest&#xD;&#xA;" />
+      <value string="Connection: keep-alive&#xD;&#xA;Accept: application/json, text/javascript, */*; q=0.01&#xD;&#xA;Accept-Encoding: gzip, deflate, sdch&#xD;&#xA;Accept-Language: en-US,en;q=0.8,af;q=0.6,it;q=0.4&#xD;&#xA;Cookie: ASP.NET_SessionId=uo4nb1qgpnomho0po1ibcfjh&#xD;&#xA;Host: localhost:51664&#xD;&#xA;Referer: http://localhost:51664/&#xD;&#xA;User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36&#xD;&#xA;X-Requested-With: XMLHttpRequest&#xD;&#xA;" />
     </item>
     <item name="APPL_MD_PATH">
       <value string="/LM/W3SVC/7/ROOT" />
@@ -88,10 +88,10 @@
       <value string="127.0.0.1" />
     </item>
     <item name="PATH_INFO">
-      <value string="/__browserLink/requestData/aa9e11d0bd8a4014ac0eaab47cff9a79" />
+      <value string="/__browserLink/requestData/3733892122f94b6892ff5a959ab7c47c" />
     </item>
     <item name="PATH_TRANSLATED">
-      <value string="C:\dev\Wetu\Wetu_GUI\Wetu_GUI\__browserLink\requestData\aa9e11d0bd8a4014ac0eaab47cff9a79" />
+      <value string="C:\dev\Wetu\Wetu_GUI\Wetu_GUI\__browserLink\requestData\3733892122f94b6892ff5a959ab7c47c" />
     </item>
     <item name="QUERY_STRING">
       <value string="version=2" />
@@ -103,13 +103,13 @@
       <value string="127.0.0.1" />
     </item>
     <item name="REMOTE_PORT">
-      <value string="52058" />
+      <value string="51549" />
     </item>
     <item name="REQUEST_METHOD">
       <value string="GET" />
     </item>
     <item name="SCRIPT_NAME">
-      <value string="/__browserLink/requestData/aa9e11d0bd8a4014ac0eaab47cff9a79" />
+      <value string="/__browserLink/requestData/3733892122f94b6892ff5a959ab7c47c" />
     </item>
     <item name="SERVER_NAME">
       <value string="localhost" />
@@ -127,7 +127,7 @@
       <value string="Microsoft-IIS/8.0" />
     </item>
     <item name="URL">
-      <value string="/__browserLink/requestData/aa9e11d0bd8a4014ac0eaab47cff9a79" />
+      <value string="/__browserLink/requestData/3733892122f94b6892ff5a959ab7c47c" />
     </item>
     <item name="HTTP_CONNECTION">
       <value string="keep-alive" />
@@ -140,6 +140,9 @@
     </item>
     <item name="HTTP_ACCEPT_LANGUAGE">
       <value string="en-US,en;q=0.8,af;q=0.6,it;q=0.4" />
+    </item>
+    <item name="HTTP_COOKIE">
+      <value string="ASP.NET_SessionId=uo4nb1qgpnomho0po1ibcfjh" />
     </item>
     <item name="HTTP_HOST">
       <value string="localhost:51664" />
@@ -159,4 +162,9 @@
       <value string="2" />
     </item>
   </queryString>
+  <cookies>
+    <item name="ASP.NET_SessionId">
+      <value string="uo4nb1qgpnomho0po1ibcfjh" />
+    </item>
+  </cookies>
 </error>

@@ -221,5 +221,36 @@ namespace Wetu_GUI.Models
 
             return ReturnObject;
         }
+
+        public string GetUsername(int Userkey)
+        {
+            string ReturnObject = "";
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetUsername;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Parameters.AddWithValue("@UserKey", Userkey);
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    ReturnObject = drI["Username"].ToString();
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+
+            return ReturnObject;
+        }
     }
 }

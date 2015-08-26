@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Data.SqlClient;
 
 namespace Proximity_Logging_Simulator
 {
@@ -13,27 +14,52 @@ namespace Proximity_Logging_Simulator
     {
         static void Main(string[] args)
         {
-            DataBlocks data = new DataBlocks();
+            List<Company> companies = new List<Company>();
+            DatabaseConnection dbConn = new DatabaseConnection();
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec usp_t_GetAllCompanies", con))
+                {
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            companies.Add(new Company(Convert.ToInt32(drI["CompanyId"])));
+                        }
+                    }
+                }
+            }
+
             Console.WriteLine("Starting");
+            Random rnd = new Random();
 
             int DevA = 0;
             int DevB = 1;
             string DeviceA = "";
             string DeviceB = "";
-            
-            while(true)
+            int RandComp = 0;
+
+            int count = 0;
+
+
+            while (count <= 5000000)
             {
                 if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape) break;
 
-                DevA = data.GetRandom(-1);
-                DeviceA = data.Devices[DevA];
-                DevB = data.GetRandom(DevA);
-                DeviceB = data.Devices[DevB];
-                DateTime start = data.RandomDateTime();
-                DateTime end = DateTime.Now;
+                RandComp = rnd.Next(0, companies.Count); ;
 
-                Console.WriteLine(DeviceA + " in prox. of " + DeviceB);
+                DevA = companies[RandComp].GetRandom(-1);
+                DeviceA = companies[RandComp].Devices[DevA];
+                DevB = companies[RandComp].GetRandom(DevA);
+                DeviceB = companies[RandComp].Devices[DevB];
+                DateTime start = companies[RandComp].RandomDateTime();
+                DateTime end = companies[RandComp].RandomDateTime(start); 
 
+                Console.WriteLine(DeviceA + " in prox. of " + DeviceB);            
+                
                 using (var client = new WebClient())
                 {
                     var values = new NameValueCollection();
@@ -67,7 +93,8 @@ namespace Proximity_Logging_Simulator
                 }
 
                 Console.WriteLine("Sleeping");
-                Thread.Sleep(100);
+                count++;
+                Thread.Sleep(50);
             }
 
             Console.WriteLine("Exit");
