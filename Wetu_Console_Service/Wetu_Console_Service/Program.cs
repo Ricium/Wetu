@@ -16,7 +16,9 @@ namespace Wetu_Console_Service
         {
             int Sensitivity = 2;
             int SocialHistoryDays = 2;
-            Setup Service = new Setup(Sensitivity,SocialHistoryDays);  
+            int InteractionSensitivity = 5;
+            int InteractionTimeSensitivity = 2;
+            Setup Service = new Setup(Sensitivity, SocialHistoryDays, InteractionSensitivity, InteractionTimeSensitivity);  
 
             Console.WriteLine("Welcome to Wetu's Database Polling Service");
             Service.WriteLog(LogMessages.START_SERVICE, EventTypes.Information, EventCategories.SERVICE_EVENT);
@@ -39,23 +41,40 @@ namespace Wetu_Console_Service
 
             Console.WriteLine("Getting Animals Showing Estrous Behaviour @" + DateTime.Now.ToString());
             Service.WriteLog("Getting Animals Showing Estrous Behaviour", EventTypes.Information, EventCategories.DATABASE_EVENT);
+
+            Console.WriteLine("-----------------------------------------------------" + DateTime.Now.ToString());
+           
             List<int> EstrousAnimals = Service.GetEstrousAnimals();
             Console.WriteLine(EstrousAnimals.Count.ToString() + " Animals of " + Service.Animals.Count.ToString() 
-                              + " Shows Estrous Activity (Sensitivy " + Sensitivity + ") @: " + DateTime.Now.ToString());
-            Service.WriteLog(EstrousAnimals.Count.ToString() + " Animals of " + Service.Animals.Count.ToString() 
-                              + " Shows Estrous Activity (Sensitivy " + Sensitivity + ")", EventTypes.Information, EventCategories.DATABASE_EVENT);
-            
-            
+                              + " based on Social Groups (Sensitivy " + Sensitivity + ") @ " + DateTime.Now.ToString());            
+
+            List<InteractionCount> InteractionCounts = Service.GetInteractionCounts();
+            Console.WriteLine(InteractionCounts.Count.ToString() + " Animals of " + Service.Animals.Count.ToString()
+                              + " based on Number of Interactions(Sensitivy " + InteractionSensitivity + ") @ " + DateTime.Now.ToString());
+
+            List<InteractionCount> InteractionTimes = Service.GetInteractionTimes();
+            Console.WriteLine(InteractionTimes.Count.ToString() + " Animals of " + Service.Animals.Count.ToString()
+                              + " based on Length of Interactions(Sensitivy " + InteractionTimeSensitivity + ") @ " + DateTime.Now.ToString());
+
+            List<int> MostLikeyEstrous = Service.GetAnimalsShowingEstrousBehaviour();
+            Console.WriteLine(MostLikeyEstrous.Count.ToString() + " Animals of " + Service.Animals.Count.ToString()
+                              + " Shows Estrous Activity  @ " + DateTime.Now.ToString());
+
+            Service.WriteLog(MostLikeyEstrous.Count.ToString() + " Animals of " + Service.Animals.Count.ToString()
+                              + " Shows Estrous Activity", EventTypes.Information, EventCategories.DATABASE_EVENT);
+
             /*foreach (int animal in EstrousAnimals)
             {
                 Console.WriteLine(animal.ToString());
+             * Service.WriteLog(EstrousAnimals.Count.ToString() + " Animals of " + Service.Animals.Count.ToString() 
+                              + " Shows Estrous Activity (Sensitivy " + Sensitivity + ")", EventTypes.Information, EventCategories.DATABASE_EVENT);
             }*/
 
             Console.WriteLine("Finish Processing Data @ " + DateTime.Now.ToString());
 
                 //...Wait
-            Thread.Sleep(5000);
-                //Console.ReadKey();
+            Thread.Sleep(10000);
+           // Console.ReadKey();
             Service.WriteLog(LogMessages.STOP_SERVICE, EventTypes.Information, EventCategories.SERVICE_EVENT);
         }
     }

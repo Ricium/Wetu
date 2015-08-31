@@ -22,6 +22,8 @@ namespace Wetu_Console_Service
 
         private int SocialHistoryDays { get; set; }
         private int SocialSensitivity { get; set; }
+        private double InteractionSensitivity { get; set; }
+        private double InteractionTimeSensitivity { get; set; }
 
         public List<int> Animals { get; set; }
 
@@ -33,11 +35,14 @@ namespace Wetu_Console_Service
         
         private List<SocialGroup> SocialGroups { get; set; }
         private List<SocialGroup> SocialGroupsLast { get; set; }
-        private List<int> EstrousSocialActivity { get; set; }        
+        private List<int> EstrousSocialActivity { get; set; }
+
+        private List<InteractionCount> NumberOfInteractions { get; set; }
+        private List<InteractionCount> TimeOfInteractions { get; set; }
         #endregion
 
         #region Class Functions
-        public Setup(int _Sensitivity, int _SocialHistoryDays)
+        public Setup(int _Sensitivity, int _SocialHistoryDays, int _InteractionSensitivity, int _InteractionTimeSensitivity)
         {
             this.EventId = 0;            
             this.Animals = new List<int>();
@@ -46,9 +51,13 @@ namespace Wetu_Console_Service
             this.InteractionsLast = new List<InteractionLog>();
             this.SocialGroupsLast = new List<SocialGroup>();
             this.EstrousSocialActivity = new List<int>();
+            this.NumberOfInteractions = new List<InteractionCount>();
+            this.TimeOfInteractions = new List<InteractionCount>();
 
             this.SocialSensitivity = _Sensitivity;
             this.SocialHistoryDays = _SocialHistoryDays;
+            this.InteractionSensitivity = _InteractionSensitivity;
+            this.InteractionTimeSensitivity = _InteractionTimeSensitivity;
 
             Console.WriteLine("Initializing Log @ " + DateTime.Now.ToString());
             this.InitializeLog();
@@ -58,6 +67,14 @@ namespace Wetu_Console_Service
             this.SetAllInteractions();
             Console.WriteLine("Setting 3 Day Interactions @ " + DateTime.Now.ToString());
             this.SetAllInteractionsLast();
+            Console.WriteLine("Setting Estrous Animals based on Social Groups @ " + DateTime.Now.ToString());
+            this.SetSocialGroups();
+            this.SetSocialGroupsLast();
+            this.SetEstorusAnimals(this.SocialSensitivity);
+            Console.WriteLine("Setting Interaction Averages @ " + DateTime.Now.ToString());
+            this.SetNumberOfInteractions();
+            Console.WriteLine("Setting Interaction Time Averages @ " + DateTime.Now.ToString());
+            this.SetInteractionTimes();
         }
 
         public List<InteractionLog> GetInteractions()
@@ -282,6 +299,90 @@ namespace Wetu_Console_Service
 
             this.InteractionsLast = interactionLog;
         }
+
+        private void SetNumberOfInteractions()
+        {
+            List<InteractionCount> interactionLog = new List<InteractionCount>();
+            InteractionCount ins;
+
+            SqlConnection sqlConn = DataBaseConnection.SqlConn();
+
+            using (var con = sqlConn)
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec service_GetEstrousFromInteractions @TestDate, @Sensitivity", con))
+                {
+                    cmd.Parameters.AddWithValue("@Testdate", DateTime.Today);
+                    cmd.Parameters.AddWithValue("@Sensitivity", this.InteractionSensitivity);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        int AnimalId = drI.GetOrdinal("AnimalId");
+                        int Average = drI.GetOrdinal("AveragePerDay");
+                        int Last = drI.GetOrdinal("LastDay");
+
+                        while (drI.Read())
+                        {
+                            ins = new InteractionCount();
+                            ins.AnimalId = Convert.ToInt32(drI[AnimalId]);
+                            ins.AveragePerDay = Convert.ToInt32(drI[Average]);
+                            ins.LastPeriod = Convert.ToInt32(drI[Last]);
+
+                            interactionLog.Add(ins);
+                        }
+                    }
+                }
+
+                con.Close();
+                con.Dispose();
+            }
+
+            Console.WriteLine("Done Inserting Interactions in object list @ " + DateTime.Now.ToString());
+            this.NumberOfInteractions = interactionLog;
+        }
+
+        private void SetInteractionTimes()
+        {
+            List<InteractionCount> interactionLog = new List<InteractionCount>();
+            InteractionCount ins;
+
+            SqlConnection sqlConn = DataBaseConnection.SqlConn();
+
+            using (var con = sqlConn)
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec service_GetEstrousFromInteractionTime @TestDate, @Sensitivity", con))
+                {
+                    cmd.Parameters.AddWithValue("@Testdate", DateTime.Today);
+                    cmd.Parameters.AddWithValue("@Sensitivity", this.InteractionSensitivity);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        int AnimalId = drI.GetOrdinal("AnimalId");
+                        int Average = drI.GetOrdinal("AveragePerDay");
+                        int Last = drI.GetOrdinal("LastDay");
+
+                        while (drI.Read())
+                        {
+                            ins = new InteractionCount();
+                            ins.AnimalId = Convert.ToInt32(drI[AnimalId]);
+                            ins.AveragePerDay = Convert.ToInt32(drI[Average]);
+                            ins.LastPeriod = Convert.ToInt32(drI[Last]);
+
+                            interactionLog.Add(ins);
+                        }
+                    }
+                }
+
+                con.Close();
+                con.Dispose();
+            }
+
+            Console.WriteLine("Done Inserting Interaction Times in object list @ " + DateTime.Now.ToString());
+            this.TimeOfInteractions = interactionLog;
+        }
         #endregion
 
         #region Social Group Functions
@@ -299,7 +400,6 @@ namespace Wetu_Console_Service
 
         public List<int> GetEstrousAnimals()
         {
-            SetEstorusAnimals(this.SocialSensitivity);
             return this.EstrousSocialActivity;
         }
 
@@ -350,8 +450,6 @@ namespace Wetu_Console_Service
             return SocialGroupA.AnimalsInGroup.SequenceEqual(SocialGroupB.AnimalsInGroup);
         }
 
-
-
         private bool ShowsEstrousSocialBehaviour(List<int> HistoricSocialGroup, List<int> CurrentSocialGroup, int Sensitivity)
         {
             List<bool> Hits = new List<bool>();
@@ -389,6 +487,55 @@ namespace Wetu_Console_Service
             {
                 return false;
             }
+        }
+        #endregion
+
+        #region Interaction Average Functions
+        public List<InteractionCount> GetInteractionCounts()
+        {
+            return this.NumberOfInteractions;
+        }
+
+        public List<InteractionCount> GetInteractionTimes()
+        {
+            return this.TimeOfInteractions;
+        }
+
+        public List<int> GetAnimalsShowingEstrousBehaviour()
+        {
+            int[] interactionCounts = this.NumberOfInteractions.Select(x => x.AnimalId).ToArray();
+            int[] interactionTimes = this.TimeOfInteractions.Select(x => x.AnimalId).ToArray();
+
+            int[] both = interactionCounts.Intersect(interactionTimes).ToArray();
+            int[] onlyCount = interactionCounts.Except(interactionTimes).ToArray();
+            int[] onlyTime = interactionTimes.Except(interactionCounts).ToArray();
+
+            int[] socialEstrousAnimals = this.EstrousSocialActivity.ToArray();
+
+            List<int> MostLikely = new List<int>();
+
+            for (int i = 0; i < onlyCount.Length; i++)
+            { 
+                if(socialEstrousAnimals.Contains(onlyCount[i]))
+                {
+                    MostLikely.Add(onlyCount[i]);
+                }
+            }
+
+            for (int i = 0; i < onlyTime.Length; i++)
+            {
+                if (socialEstrousAnimals.Contains(onlyTime[i]))
+                {
+                    MostLikely.Add(onlyTime[i]);
+                }
+            }
+
+            for (int i = 0; i < both.Length; i++)
+            {
+                MostLikely.Add(both[i]);
+            }
+            
+             return MostLikely;
         }
         #endregion
 
@@ -518,9 +665,7 @@ namespace Wetu_Console_Service
                 }
             }
         }
-        #endregion
-
-        
+        #endregion        
     }
     #endregion
 
@@ -569,6 +714,13 @@ namespace Wetu_Console_Service
         public int AnimalInProx { get; set; }
         public int NumberInteractions { get; set; }
         public int TimeInteracted { get; set; }
+    }
+
+    public class InteractionCount
+    {
+        public int AnimalId { get; set; }
+        public int AveragePerDay { get; set; }
+        public int LastPeriod { get; set; }
     }
     #endregion
 
