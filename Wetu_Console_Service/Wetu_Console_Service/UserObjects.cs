@@ -65,7 +65,7 @@ namespace Wetu_Console_Service
             this.SetAnimals();
             Console.WriteLine("Setting Lifetime Interactions @ " + DateTime.Now.ToString());
             this.SetAllInteractions();
-            Console.WriteLine("Setting 3 Day Interactions @ " + DateTime.Now.ToString());
+            Console.WriteLine("Setting " + this.SocialHistoryDays.ToString() + " Day Interactions @ " + DateTime.Now.ToString());
             this.SetAllInteractionsLast();
             Console.WriteLine("Setting Estrous Animals based on Social Groups @ " + DateTime.Now.ToString());
             this.SetSocialGroups();
@@ -103,7 +103,7 @@ namespace Wetu_Console_Service
         #endregion
 
         #region Notify Functions
-        public void SendPushBullet(string Message)
+        public void SendPushBullet(string Message, string _Title)
         {
             ///TODO: Add Client API Keys in DB
             ///TODO: Retreive Client API Key
@@ -117,7 +117,7 @@ namespace Wetu_Console_Service
                 PushNoteRequest reqeust = new PushNoteRequest()
                 {
                     Email = currentUserInformation.Email,
-                    Title = NotificationTitles.WELCOME_MESSAGE,
+                    Title = _Title,
                     Body = Message
                 };
 
@@ -388,13 +388,13 @@ namespace Wetu_Console_Service
         #region Social Group Functions
         public List<SocialGroup> GetSocialGroups()
         {
-            SetSocialGroups();
+            //SetSocialGroups();
             return this.SocialGroups;
         }
 
         public List<SocialGroup> GetSocialGroupsLast()
         {
-            SetSocialGroupsLast();
+            //SetSocialGroupsLast();
             return this.SocialGroupsLast;
         }
 
@@ -535,7 +535,7 @@ namespace Wetu_Console_Service
                 MostLikely.Add(both[i]);
             }
             
-             return MostLikely;
+             return MostLikely.Distinct().ToList();
         }
         #endregion
 
@@ -756,6 +756,7 @@ namespace Wetu_Console_Service
     public struct NotificationTitles
     {
         public static string WELCOME_MESSAGE = "Welcome to Wetu's Pushbullet Service";
+        public static string ESTROUS_MESSAGE = "Estrous Alert";
     }
 
     public struct EventTypes

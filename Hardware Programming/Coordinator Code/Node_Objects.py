@@ -100,10 +100,13 @@ class DeviceNode:
                         
                     if signal.endswith(','):
                         signal = signal[:len(signal)-1]
-                    
-                    if int(signal) >= -40:
-                        module = AnimalNode(name, datetime.now(), signal)
-                        connections.append(module)
+
+                    try:
+                        if int(signal) >= -40:
+                            module = AnimalNode(name, datetime.now(), signal)
+                            connections.append(module)
+                    except ValueError:
+                        break
         self.clear_buffer()
         return connections
 
