@@ -33,7 +33,8 @@
                {
                    command.Edit().ButtonType(GridButtonType.Image).Text("Edit");
                    command.Delete().ButtonType(GridButtonType.Image).Text("Remove");
-               }).Title("").Width(90);
+                   command.Custom("View").ButtonType(GridButtonType.Image).Action("Tag", "Herd").SendDataKeys(true).SendState(false);
+               }).Title("").Width(125);
        })
        .DataBinding(db => 
            {

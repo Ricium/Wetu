@@ -56,6 +56,213 @@ namespace Wetu_GUI.Models
             return ins;
         }
 
+        public AnimalView GetAnimalView(int AnimalId)
+        {
+            AnimalView ins = new AnimalView();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetAnimalView;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Parameters.AddWithValue("@AnimalId", AnimalId);
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                    ins.BirthDate = Convert.ToDateTime(drI["Birthdate"]);
+                    ins.CreatedDate = Convert.ToDateTime(drI["CreatedDate"]);
+                    ins.DecriptiveName = drI["DecriptiveName"].ToString();
+                    ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                    ins.TagNumber = drI["TagNumber"].ToString();
+                    ins._AnimalType = drI["Species"].ToString();
+                    ins._Company = drI["Company"].ToString();
+                    ins._ModifiedBy = drI["Username"].ToString();
+                    ins._Sex = drI["Sex"].ToString();
+                    ins._Address = drI["DeviceAddress"].ToString();
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+
+            DateTime EndDate = DateTime.Now;
+            DateTime StartDate = EndDate.AddDays(-2);
+
+            ins.LifetimeSocialGroup = GetAnimalSocialGroup(ins.AnimalId);
+            ins.RecentSocialGroup = GetAnimalSocialGroup(ins.AnimalId, StartDate, EndDate);
+
+            ins = GetAnimalInteractions(ins);
+            ins = IsAnimalShowingEstrousBehaviour(ins, 2, 5, 5);
+
+            ins.Age = DateTime.Today.Year - ins.BirthDate.Year;
+            if (ins.BirthDate > DateTime.Today.AddYears(-ins.Age)) ins.Age--;
+
+            return ins;
+        }
+
+        public List<SocialGroup> GetAnimalSocialGroup(int AnimalId)
+        {
+            List<SocialGroup> ReturnList = new List<SocialGroup>();
+            SocialGroup ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetAnimalSocialGroupLifetime;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Parameters.AddWithValue("@AnimalId", AnimalId);
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    ins = new SocialGroup();
+                    ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                    ins._Address = drI["DeviceAddress"].ToString();
+                    ins.DecriptiveName = drI["DecriptiveName"].ToString();
+                    ins.TagNumber = drI["TagNumber"].ToString();
+                    ins._Sex = drI["Sex"].ToString();
+                    ins._Address = drI["DeviceAddress"].ToString();
+                    ReturnList.Add(ins);
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+
+            return ReturnList;
+        }
+
+        public List<SocialGroup> GetAnimalSocialGroup(int AnimalId, DateTime StartDate, DateTime EndDate)
+        {
+            List<SocialGroup> ReturnList = new List<SocialGroup>();
+            SocialGroup ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetAnimalSocialGroupRecent;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Parameters.AddWithValue("@AnimalId", AnimalId);
+            cmdI.Parameters.AddWithValue("@StartDate", StartDate);
+            cmdI.Parameters.AddWithValue("@EndDate", EndDate);
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    ins = new SocialGroup();
+                    ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                    ins._Address = drI["DeviceAddress"].ToString();
+                    ins.DecriptiveName = drI["DecriptiveName"].ToString();
+                    ins.TagNumber = drI["TagNumber"].ToString();
+                    ins._Sex = drI["Sex"].ToString();
+                    ins._Address = drI["DeviceAddress"].ToString();
+                    ReturnList.Add(ins);
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+
+            return ReturnList;
+        }
+
+        public AnimalView GetAnimalInteractions(AnimalView ins)
+        {
+            DateTime EndDate = DateTime.Now;
+            DateTime StartDate = EndDate.AddHours(-2);
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetAnimalInteractions;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Parameters.AddWithValue("@AnimalId", ins.AnimalId);
+            cmdI.Parameters.AddWithValue("@StartDate", StartDate);
+            cmdI.Parameters.AddWithValue("@EndDate", EndDate);
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    ins.AverageNumberInteractions = Math.Ceiling(Convert.ToDouble(drI["AverageInteractionsPerDay"]) / 24);
+                    ins.AverageLengthInteractions = Math.Ceiling(Convert.ToDouble(drI["AverageInteractionTimePerDay"]) /24);
+                    ins.RecentNumberInteractions = Convert.ToInt32(drI["RecentInteractions"]);
+                    ins.RecentLengthInteractions = Convert.ToDouble(drI["RecentInteractionsTime"]);
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+            return ins;
+        }
+
+        public AnimalView IsAnimalShowingEstrousBehaviour(AnimalView ins, int SocialSensitivity, int InteractionSensitivity, int InteractionTimeSensitivity)
+        {
+            bool socialset = false;
+            bool countset = false;
+            bool timeset = false;
+
+            ins.ChangeSocial = false;
+            ins.ChangeInteractions = false;
+            ins.ChangeLengthInteractions = false;
+
+            List<int> SameSocialAnimals = ins.LifetimeSocialGroup.Select(x => x.AnimalId).Intersect(ins.RecentSocialGroup.Select(x => x.AnimalId)).ToList();
+            if (SameSocialAnimals.Count <= (ins.LifetimeSocialGroup.Count - SocialSensitivity))
+            {
+                socialset = true;
+                ins.ChangeSocial = true;
+            }
+
+            if (ins.RecentNumberInteractions >= InteractionSensitivity * ins.AverageNumberInteractions)
+            {
+                countset = true;
+                ins.ChangeInteractions = true;
+            }
+
+            if (ins.RecentLengthInteractions >= InteractionTimeSensitivity * ins.AverageLengthInteractions)
+            {
+                timeset = true;
+                ins.ChangeLengthInteractions = true;
+            }
+
+            if((socialset && timeset) || (socialset && countset) || (countset && timeset))
+            {
+                ins.ShowingEstrousBehaviour = true;
+            }
+
+
+            return ins;
+        }
+
         public Animal InsertAnimal(Animal ins)
         {
             Animal ReturnObject = new Animal();

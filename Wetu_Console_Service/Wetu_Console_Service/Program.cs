@@ -70,19 +70,15 @@ namespace Wetu_Console_Service
             Service.WriteLog(MostLikeyEstrous.Count.ToString() + " Animals of " + Service.Animals.Count.ToString()
                               + " Shows Estrous Activity", EventTypes.Information, EventCategories.DATABASE_EVENT);
 
-            Random rand = new Random();
-            int index = rand.Next(0,MostLikeyEstrous.Count);
-
-            Service.SendPushBullet("AnimalID: " + MostLikeyEstrous[index].ToString() + " shows Estrous Behaviour", NotificationTitles.ESTROUS_MESSAGE);
-            Service.WriteLog(LogMessages.NOTIFY, EventTypes.Information, EventCategories.NOTIFICATION_EVENT);
-
-            /*foreach (int animal in EstrousAnimals)
+            if(MostLikeyEstrous.Count > 0)
             {
-                Console.WriteLine(animal.ToString());
-             * Service.WriteLog(EstrousAnimals.Count.ToString() + " Animals of " + Service.Animals.Count.ToString() 
-                              + " Shows Estrous Activity (Sensitivy " + Sensitivity + ")", EventTypes.Information, EventCategories.DATABASE_EVENT);
-            }*/
+                Random rand = new Random();
+                int index = rand.Next(0, MostLikeyEstrous.Count);
 
+                Service.SendPushBullet("AnimalID: " + MostLikeyEstrous[index].ToString() + " shows Estrous Behaviour", NotificationTitles.ESTROUS_MESSAGE);
+                Service.WriteLog(LogMessages.NOTIFY, EventTypes.Information, EventCategories.NOTIFICATION_EVENT);
+            }
+            
             Console.WriteLine("Finish Processing Data @ " + DateTime.Now.ToString());
 
                 //...Wait

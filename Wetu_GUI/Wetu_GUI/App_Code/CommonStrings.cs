@@ -51,6 +51,7 @@ namespace Wetu_GUI
         public static string UpdateDevice = "usp_t_DevicesUpdate";
         public static string DeleteDevice = "usp_t_DevicesDelete";
         public static string GetDeviceDropDown = "usp_t_DevicesSelectDropDown";
+        public static string GetMaleAnimalsDropDown = "view_SelectMaleAnimals";
         #endregion
 
         #region Animal
@@ -84,6 +85,13 @@ namespace Wetu_GUI
         #region Alternative Selects
         public static string GetAllUsers = "usp_t_UsersSelectAll";
         public static string GetUsername = "usp_t_UsersSelect";
+        #endregion
+
+        #region Animal View
+        public static string GetAnimalView = "view_t_AnimalsSelect";
+        public static string GetAnimalSocialGroupLifetime = "view_t_AnimalsSelectSocialGroup";
+        public static string GetAnimalSocialGroupRecent = "view_t_AnimalsSelectSocialGroupTime";
+        public static string GetAnimalInteractions = "view_t_AnimalSelectInteractions";
         #endregion
     }
 }

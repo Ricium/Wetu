@@ -108,9 +108,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Code_\AutoLogOffActionFilterAttribute.cs" />
-    <Compile Include="App_Code_\CommonStrings.cs" />
-    <Compile Include="App_Code_\DatabaseConnection.cs" />
+    <Compile Include="App_Code\AutoLogOffActionFilterAttribute.cs" />
+    <Compile Include="App_Code\CommonStrings.cs" />
+    <Compile Include="App_Code\DatabaseConnection.cs" />
     <Compile Include="App_GlobalResources\EditorLocalization.bg-BG.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -324,7 +324,10 @@
     <Compile Include="Models\Repositories\DeviceRepository.cs" />
     <Compile Include="Models\Repositories\LoggingRepository.cs" />
     <Compile Include="Models\Repositories\SecurityRepository.cs" />
+    <Compile Include="Models\ViewModels\AnimalRelationship.cs" />
+    <Compile Include="Models\ViewModels\AnimalView.cs" />
     <Compile Include="Models\ViewModels\DeviceView.cs" />
+    <Compile Include="Models\ViewModels\SocialGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -626,6 +629,13 @@
     <Content Include="Views\Account\RegisterUser.aspx" />
     <Content Include="Views\Device\Index.aspx" />
     <Content Include="Views\Herd\Index.aspx" />
+    <Content Include="Views\Herd\Tag.aspx" />
+    <Content Include="Views\Herd\_MotherAdd.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="Views\Herd\_FatherAdd.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="Views\Home\Home.aspx" />
     <Content Include="Views\Log\Index.aspx" />
     <Content Include="Views\Maintenance\Index.aspx">

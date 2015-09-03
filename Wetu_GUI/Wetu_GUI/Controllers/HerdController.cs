@@ -80,5 +80,32 @@ namespace Wetu_GUI.Controllers
             return View();
         }
 
+        public ActionResult Tag(int id)
+        {
+            AnimalView ins = animalRep.GetAnimalView(id);
+            return View(ins);
+        }
+
+        public ActionResult _FatherAdd(int id)
+        {
+            // Load Male Animals
+            ViewData["MaleParents"] = commonRep.GetMaleAnimalsDropDown();
+            AnimalRelationship ins = new AnimalRelationship();
+            ins.AnimalId = id;
+            return PartialView();
+        }
+
+        public ActionResult _MotherAdd(int id)
+        {
+            // Load Female Animals
+            return PartialView();
+        }
+
+        [HttpPost]
+        public ActionResult _AddParent(AnimalRelationship ins)
+        {
+            return Content(ins.ParentAnimalId.ToString(), "text/plain");
+        }
+
     }
 }

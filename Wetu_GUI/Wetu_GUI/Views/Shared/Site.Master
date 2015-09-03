@@ -28,7 +28,7 @@
 
     <%= Html.Telerik().StyleSheetRegistrar()
                  .DefaultGroup(group => group.Add("telerik.common.min.css")
-                 .Add("telerik.Office2010Blue.min.css"))
+                 .Add("telerik.forest.min.css"))
     %>
     <%= Html.Telerik().ScriptRegistrar() %>
 </body>
