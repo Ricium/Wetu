@@ -501,6 +501,95 @@ namespace Wetu_GUI.Models
 
             return ReturnObject;
         }
+
+        public List<SelectListItem> GetFemaleAnimalsDropDown()
+        {
+            List<SelectListItem> ReturnObject = new List<SelectListItem>();
+            SelectListItem ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetFemaleAnimalsDropDown + " @Companies", con))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("Item", typeof(int));
+
+                    foreach (int item in companies)
+                        table.Rows.Add(item);
+
+                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                    pList.TypeName = "dbo.IntList";
+                    pList.Value = table;
+
+                    cmd.Parameters.Add(pList);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            ins = new SelectListItem();
+                            ins.Text = drI["DropDownName"].ToString();
+                            ins.Value = drI["AnimalId"].ToString();
+                            ReturnObject.Add(ins);
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
+
+        public List<SelectListItem> GetFemaleAnimalsDropDown(int AnimalId)
+        {
+            List<SelectListItem> ReturnObject = new List<SelectListItem>();
+            SelectListItem ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetFemaleAnimalsDropDown + " @Companies", con))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("Item", typeof(int));
+
+                    foreach (int item in companies)
+                        table.Rows.Add(item);
+
+                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                    pList.TypeName = "dbo.IntList";
+                    pList.Value = table;
+
+                    cmd.Parameters.Add(pList);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            if (Convert.ToInt32(drI["AnimalId"]) != AnimalId)
+                            {
+                                ins = new SelectListItem();
+                                ins.Text = drI["DropDownName"].ToString();
+                                ins.Value = drI["AnimalId"].ToString();
+                                ReturnObject.Add(ins);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
         #endregion
 
         #region Associative Table Functions

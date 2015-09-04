@@ -52,6 +52,7 @@ namespace Wetu_GUI
         public static string DeleteDevice = "usp_t_DevicesDelete";
         public static string GetDeviceDropDown = "usp_t_DevicesSelectDropDown";
         public static string GetMaleAnimalsDropDown = "view_SelectMaleAnimals";
+        public static string GetFemaleAnimalsDropDown = "view_SelectFemaleAnimals";
         #endregion
 
         #region Animal

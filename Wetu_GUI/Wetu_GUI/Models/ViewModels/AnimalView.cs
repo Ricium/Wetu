@@ -54,6 +54,8 @@ namespace Wetu_GUI.Models
         public ParentView MaleParent { get; set; }
         public ParentView FemaleParent { get; set; }
 
+        public FamilyTree Family { get; set; }
+
         public List<SocialGroup> LifetimeSocialGroup { get; set; }
         public List<SocialGroup> RecentSocialGroup { get; set; }
 

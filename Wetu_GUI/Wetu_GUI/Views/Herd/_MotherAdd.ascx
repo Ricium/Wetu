@@ -1,6 +1,11 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<AnimalRelationship>" %>
 <%@ Import Namespace="Wetu_GUI" %>
 <%@ Import Namespace="Wetu_GUI.Models" %>
 <%@ Import Namespace="Wetu_GUI.Controllers" %>
 
-Hello Mommy
+<% using (Html.BeginForm("_AddParent", "Herd", FormMethod.Post))
+   {%>
+<%: Html.HiddenFor(m => m.ChildAnimalId)%>
+<%: Html.Telerik().DropDownListFor(m => m.ParentAnimalId).BindTo((IEnumerable<SelectListItem>)ViewData["FemaleParents"])%>
+<button type="submit">Add Mother</button>
+<% } %>

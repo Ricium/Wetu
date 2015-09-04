@@ -109,6 +109,8 @@ namespace Wetu_GUI.Models
             ins.FemaleParent = GetMotherChildRelationship(ins.AnimalId);
             ins.MaleParent = GetFatherChildRelationship(ins.AnimalId);
 
+            ins.Family = GetFamilyTree(ins.AnimalId, 5, 0);
+
             return ins;
         }
 
@@ -590,6 +592,52 @@ namespace Wetu_GUI.Models
             {
                 return ins;
             }            
+        }
+
+        public FamilyTree GetFamilyTree(int AnimalId, int Depth, int CurrentLevel)
+        {
+            FamilyTree ins = new FamilyTree();
+            ins.AnimalId = AnimalId;
+            ins.Level = CurrentLevel;
+
+            //...Get Father
+            ParentView Father = GetFatherChildRelationship(AnimalId);
+            
+            //...Get Mother
+            ParentView Mother = GetMotherChildRelationship(AnimalId);
+                        
+
+            if(CurrentLevel <= Depth)
+            {
+                if (Father == null)
+                {
+                    ins.MaleParentId = 0;
+                }
+                else
+                {
+                    ins.MaleParentId = Father.AnimalId;
+                }
+
+                ins.FatherParents = GetFamilyTree(ins.MaleParentId, Depth, ++CurrentLevel);
+
+                if (Mother == null)
+                {
+                    ins.FemaleParentId = 0;
+                }
+                else
+                {
+                    ins.FemaleParentId = Mother.AnimalId;
+                }
+
+                ins.MotherParents = GetFamilyTree(ins.FemaleParentId, Depth, ++CurrentLevel);                
+            }
+            else
+            {
+                ins.FatherParents = new FamilyTree();
+                ins.MotherParents = new FamilyTree();
+            }
+
+            return ins;
         }
     }
 }

@@ -327,6 +327,7 @@
     <Compile Include="Models\ViewModels\AnimalRelationship.cs" />
     <Compile Include="Models\ViewModels\AnimalView.cs" />
     <Compile Include="Models\ViewModels\DeviceView.cs" />
+    <Compile Include="Models\ViewModels\FamilyTree.cs" />
     <Compile Include="Models\ViewModels\ParentView.cs" />
     <Compile Include="Models\ViewModels\SocialGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -105,8 +105,10 @@
                                                 <td><% if(Model.FemaleParent == null)
                                                        { %> <button id="AddMother" onclick="MotherWindow()">Add</button>
                                                     <% } else { %>
-                                                    Luke I am your Mother
-                                                    <% } %>
+                                                    <%: Html.ActionLink(Model.FemaleParent.DecriptiveName + " - " 
+                                                                + Model.FemaleParent.TagNumber, "Tag"
+                                                                , new { id = Model.FemaleParent.AnimalId } )%>
+                                                <% } %>
                                                 </td>
                                             </tr>
                                         </table>
@@ -316,6 +318,91 @@
                                             </fieldset> 
                                         </td>
                                         <% } %>
+                                    </tr>
+                                </table>
+                           <%
+                       });
+                       
+                       item.Add()
+                       .Text("Family Tree")
+                       .Content(() =>
+                       {
+                           %> 
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td>Generation 0</td>
+                                                </tr>
+                                                <tr>
+                                                     <td>Current: <%: Html.ActionLink(Model.Family.AnimalId.ToString(), "Tag", new { id = Model.Family.AnimalId } )%></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td>Generation 1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Father: <%: Html.ActionLink(Model.Family.MaleParentId.ToString(), "Tag", new { id = Model.Family.MaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mother: <%: Html.ActionLink(Model.Family.FemaleParentId.ToString(), "Tag", new { id = Model.Family.FemaleParentId } )%></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td>Generation 2</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Father's Father:  <%: Html.ActionLink(Model.Family.FatherParents.MaleParentId.ToString(), "Tag", new { id = Model.Family.FatherParents.MaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Father's Mother: <%: Html.ActionLink(Model.Family.FatherParents.FemaleParentId.ToString(), "Tag", new { id = Model.Family.FatherParents.FemaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mother's Father: <%: Html.ActionLink(Model.Family.MotherParents.MaleParentId.ToString(), "Tag", new { id = Model.Family.MotherParents.MaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mother's Mother: <%: Html.ActionLink(Model.Family.MotherParents.FemaleParentId.ToString(), "Tag", new { id = Model.Family.MotherParents.FemaleParentId } )%></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td>Generation 3</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Father's father's Father: <%: Html.ActionLink(Model.Family.FatherParents.FatherParents.MaleParentId.ToString(), "Tag", new { id = Model.Family.FatherParents.FatherParents.MaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Father's father's Mother: <%: Html.ActionLink(Model.Family.FatherParents.FatherParents.FemaleParentId.ToString(), "Tag", new { id = Model.Family.FatherParents.FatherParents.FemaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Father's mother's Father: <%: Html.ActionLink(Model.Family.FatherParents.MotherParents.MaleParentId.ToString(), "Tag", new { id = Model.Family.FatherParents.MotherParents.MaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Father's mother's Mother: <%: Html.ActionLink(Model.Family.FatherParents.MotherParents.FemaleParentId.ToString(), "Tag", new { id = Model.Family.FatherParents.MotherParents.FemaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mother's father's Father: <%: Html.ActionLink(Model.Family.MotherParents.FatherParents.MaleParentId.ToString(), "Tag", new { id = Model.Family.MotherParents.FatherParents.MaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mother's father's Mother: <%: Html.ActionLink(Model.Family.MotherParents.FatherParents.FemaleParentId.ToString(), "Tag", new { id = Model.Family.MotherParents.FatherParents.FemaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mother's mother's Father: <%: Html.ActionLink(Model.Family.MotherParents.MotherParents.MaleParentId.ToString(), "Tag", new { id = Model.Family.MotherParents.MotherParents.MaleParentId } )%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mother's mother's Mother: <%: Html.ActionLink(Model.Family.MotherParents.MotherParents.FemaleParentId.ToString(), "Tag", new { id = Model.Family.MotherParents.MotherParents.FemaleParentId } )%></td>
+                                                </tr>
+                                            </table>
+                                        </td>
                                     </tr>
                                 </table>
                            <%
