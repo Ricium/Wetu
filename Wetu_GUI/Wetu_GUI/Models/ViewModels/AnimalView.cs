@@ -51,8 +51,8 @@ namespace Wetu_GUI.Models
         [DisplayName("Device Address")]
         public string _Address { get; set; }
 
-        public AnimalView MaleParent { get; set; }
-        public AnimalView FemaleParent { get; set; }
+        public ParentView MaleParent { get; set; }
+        public ParentView FemaleParent { get; set; }
 
         public List<SocialGroup> LifetimeSocialGroup { get; set; }
         public List<SocialGroup> RecentSocialGroup { get; set; }
@@ -81,4 +81,5 @@ namespace Wetu_GUI.Models
         [DisplayName("Changes in Length of Interactions")]
         public bool ChangeLengthInteractions { get; set; }
     }
+
 }

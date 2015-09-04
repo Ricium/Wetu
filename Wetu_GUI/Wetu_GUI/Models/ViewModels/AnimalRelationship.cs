@@ -7,7 +7,18 @@ namespace Wetu_GUI.Models
 {
     public class AnimalRelationship
     {
-        public int AnimalId { get; set; }
+        public AnimalRelationship()
+        {
+
+        }
+
+        public AnimalRelationship(int _ChildAnimalId)
+        {
+            this.ChildAnimalId = _ChildAnimalId;
+        }
+
+        public int RelationshipId { get; set; }
+        public int ChildAnimalId { get; set; }
         public int ParentAnimalId { get; set; }
     }
 }

@@ -28,30 +28,7 @@
             window.ajaxRequest("/Herd/_MotherAdd", { id: $('#AnimalId').val() });
             window.center();
             window.open();
-        }
-
-        function SubmitParentForm() {
-            var parentForm = $('#ParentForm').serialize();
-            
-            $.ajax(
-            {
-                url: '/Herd/_AddParent',
-                type: "POST",
-                data: parentForm,
-                dataType: "json",                
-                success: function (data) {
-                    alert("Good");
-                },
-                error: function (data) {
-                    alert(data);
-                }
-            });
-
-            var window = $('#ParentWindow').data('tWindow');
-            window.close();
-            location.reload();
-        }
-        
+        }       
     </script>
 
     <% Html.Telerik().Window()
@@ -117,8 +94,10 @@
                                                 <td><% if(Model.MaleParent == null)
                                                        { %> <button id="AddFather" onclick="FatherWindow()">Add</button>
                                                     <% } else { %>
-                                                    Luke I am your Father
-                                                    <% } %>
+                                                    <%: Html.ActionLink(Model.MaleParent.DecriptiveName + " - " 
+                                                                + Model.MaleParent.TagNumber, "Tag"
+                                                                , new { id = Model.MaleParent.AnimalId } )%>
+                                                <% } %>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -287,6 +266,8 @@
                                                 </table>
                                             </fieldset> 
                                         </td>
+
+                                        <% if(Model._Sex.Equals("Female")) {%>
                                         <td style="vertical-align:top">
                                             <fieldset style="border:solid 1px #fff">
                                                 <legend>Estrous Behaviour</legend>
@@ -334,6 +315,7 @@
                                                 </table>
                                             </fieldset> 
                                         </td>
+                                        <% } %>
                                     </tr>
                                 </table>
                            <%

@@ -62,6 +62,8 @@ namespace Wetu_GUI
         public static string DeleteAnimal = "usp_t_AnimalsDelete";
         public static string LinkAnimalDevice = "usp_a_DeviceLinksInsert";
         public static string UnlinkAnimalDevice = "usp_a_DeviceLinksDelete";
+        public static string InsertAnimalRelationship = "usp_t_RelationshipsInsert";
+        public static string GetAnimalRelationships = "usp_t_RelationshipsSelectFromChild";
         #endregion
 
         #region Logging

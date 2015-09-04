@@ -106,6 +106,9 @@ namespace Wetu_GUI.Models
             ins.Age = DateTime.Today.Year - ins.BirthDate.Year;
             if (ins.BirthDate > DateTime.Today.AddYears(-ins.Age)) ins.Age--;
 
+            ins.FemaleParent = GetMotherChildRelationship(ins.AnimalId);
+            ins.MaleParent = GetFatherChildRelationship(ins.AnimalId);
+
             return ins;
         }
 
@@ -447,6 +450,146 @@ namespace Wetu_GUI.Models
             cmdI.ExecuteNonQuery();
             cmdI.Connection.Close();
             con.Dispose();
+        }
+
+        public AnimalRelationship InsertAnimalRelationship(AnimalRelationship ins)
+        {
+            AnimalRelationship ReturnObject = new AnimalRelationship();
+            int ModifiedBy = (int)HttpContext.Current.Session["UserNo"];
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertAnimalRelationship;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@ParentId", ins.ParentAnimalId);
+                cmdI.Parameters.AddWithValue("@ChildId", ins.ChildAnimalId);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
+                cmdI.Parameters.AddWithValue("@ModifiedBy", ModifiedBy);
+                cmdI.Parameters.AddWithValue("@Removed", false);
+
+                ins.RelationshipId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
+            }
+
+            return ins;
+        }
+
+        public ParentView GetFatherChildRelationship(int ChildId)
+        {
+            ParentView ins = new ParentView();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetAnimalRelationships;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Parameters.AddWithValue("@ChildId", ChildId);
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    if (drI["Sex"].ToString().Equals("Male"))
+                    {
+                        ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                        ins.DecriptiveName = drI["DecriptiveName"].ToString();
+                        ins.TagNumber = drI["TagNumber"].ToString();
+                        ins._AnimalType = drI["Species"].ToString();
+                        ins._Sex = drI["Sex"].ToString();
+                    }                    
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+
+            if (ins.AnimalId == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return ins;
+            }  
+        }
+
+        public ParentView GetMotherChildRelationship(int ChildId)
+        {
+            ParentView ins = new ParentView();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetAnimalRelationships;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Parameters.AddWithValue("@ChildId", ChildId);
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    if (drI["Sex"].ToString().Equals("Female"))
+                    {
+                        ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                        ins.DecriptiveName = drI["DecriptiveName"].ToString();
+                        ins.TagNumber = drI["TagNumber"].ToString();
+                        ins._AnimalType = drI["Species"].ToString();
+                        ins._Sex = drI["Sex"].ToString();
+                    }
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+
+            if(ins.AnimalId == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return ins;
+            }            
         }
     }
 }

@@ -89,10 +89,9 @@ namespace Wetu_GUI.Controllers
         public ActionResult _FatherAdd(int id)
         {
             // Load Male Animals
-            ViewData["MaleParents"] = commonRep.GetMaleAnimalsDropDown();
-            AnimalRelationship ins = new AnimalRelationship();
-            ins.AnimalId = id;
-            return PartialView();
+            ViewData["MaleParents"] = commonRep.GetMaleAnimalsDropDown(id);
+            AnimalRelationship ins = new AnimalRelationship(id);
+            return PartialView(ins);
         }
 
         public ActionResult _MotherAdd(int id)
@@ -104,7 +103,9 @@ namespace Wetu_GUI.Controllers
         [HttpPost]
         public ActionResult _AddParent(AnimalRelationship ins)
         {
-            return Content(ins.ParentAnimalId.ToString(), "text/plain");
+            ins = animalRep.InsertAnimalRelationship(ins);
+
+            return RedirectToAction("Tag", new { id = ins.ChildAnimalId });
         }
 
     }

@@ -3,9 +3,9 @@
 <%@ Import Namespace="Wetu_GUI.Models" %>
 <%@ Import Namespace="Wetu_GUI.Controllers" %>
 
-<% using (Html.BeginForm(new { id = "ParentForm", name = "ParentForm" }))
+<% using (Html.BeginForm("_AddParent", "Herd", FormMethod.Post))
    {%>
-<%: Html.HiddenFor(m => m.AnimalId)%>
+<%: Html.HiddenFor(m => m.ChildAnimalId)%>
 <%: Html.Telerik().DropDownListFor(m => m.ParentAnimalId).BindTo((IEnumerable<SelectListItem>)ViewData["MaleParents"])%>
-<button type="button" onclick="SubmitParentForm()">Add Father</button>
+<button type="submit">Add Father</button>
 <% } %>
