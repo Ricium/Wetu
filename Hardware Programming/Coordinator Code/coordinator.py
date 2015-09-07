@@ -102,7 +102,13 @@ while True:
 
         # Check if packet buffer for the Device is full
         if nodes.DeviceNodes[index].buffer_at_end():
-            print 'Node: ' + address + ' buffer is full' 
+            print 'Node: ' + address + ' buffer is full'
+            nodes.DeviceNodes[index].set_accel_data()
+            acc = nodes.DeviceNodes[index].get_accel_data()
+            print acc
+            print 'X:' + acc.x
+            print 'Y:' + acc.x
+            print 'Z:' + acc.x
             try:
                 # Process data in Thread
                 process_thread = threading.Thread(target=process_node, args=(nodes.DeviceNodes[index],))

@@ -12,7 +12,7 @@ class AnimalNode:
         self.start_time = _time             # Time Node Connected to Parent Node
         self.strength = _signal             # Signal Strength of Connection
         self.end_time = datetime.now()      # Connection lost time
-
+        
     def lose_connection(self, _time):
         self.end_time = _time               # Set end time
 
@@ -29,10 +29,11 @@ class AnimalNode:
 # Class for XBee Nodes
 class DeviceNode:
     def __init__(self, addr):
-        self.address = addr                 # Address of Node in Mesh Network (Device Address)
-        self.connected = []                 # List of Animal Nodes
-        self.buffer = []                    # Buffer to store incoming data
-
+        self.address = addr                     # Address of Node in Mesh Network (Device Address)
+        self.connected = []                     # List of Animal Nodes
+        self.buffer = []                        # Buffer to store incoming data
+        self.accel = AccelData('N','N','N');    # Object to store Accelerometer data
+        
     def add_node(self, module):
         self.connected.append(module)       # Add node to list
 
@@ -107,6 +108,7 @@ class DeviceNode:
                             connections.append(module)
                     except ValueError:
                         break
+        self.set_accel_data()
         self.clear_buffer()
         return connections
 
@@ -131,6 +133,17 @@ class DeviceNode:
                 self.add_node(new_module)
 
         return lost_connections
+
+    # Get Accelerometer Data
+    def set_accel_data(self):
+        data = self.get_buffer();        
+        x = data[self.buffer_length()-2]
+        y = data[self.buffer_length()-3]
+        z = data[self.buffer_length()-4]
+        self.accel = AccelData(x, y, z)
+
+    def get_accel_data(self):
+        return self.accel
 
     def DeviceNode(object):
         pass
@@ -158,3 +171,9 @@ class Nodes:
             if node.address == address:
                 return count
             count = count + 1
+
+class AccelData:
+    def __init__(self, X, Y, Z):
+        self.x = X;
+        self.y = Y;
+        self.z = Z;
