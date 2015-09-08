@@ -7,7 +7,7 @@ using Wetu_GUI.Models;
 using Telerik.Web.Mvc;
 
 namespace Wetu_GUI.Controllers
-{
+{    
     public class LogController : Controller
     {
         private LoggingRepository logRep = new LoggingRepository();
@@ -20,6 +20,15 @@ namespace Wetu_GUI.Controllers
             return Json(new GridModel(list));
         }
 
+        [GridAction]
+        public JsonResult _ListMovementLog()
+        {
+            List<MovementLog> list = commonRep.GetMovementLog();
+            return Json(new GridModel(list));
+        }
+
+        [Authorize]
+        [AutoLogOffActionFilter]
         public ActionResult Index()
         {
             return View();
@@ -78,5 +87,39 @@ namespace Wetu_GUI.Controllers
             return Content(CommonStrings.Error, "text/html");
         }
 
+        [HttpPost]
+        public ActionResult LogMovement(string DeviceAddress, int Axis)
+        {
+            MovementLog ins = new MovementLog();
+            ins.AxisId = Axis;
+
+            //...Check if DeviceAddress is in Database
+            ins.DeviceId = logRep.GetDeviceId(DeviceAddress);
+            if (ins.DeviceId != -1)
+            {
+                //...Check if Device is Connected to Animal
+                ins.AnimalId = logRep.GetAnimalId(ins.DeviceId);
+                if (ins.AnimalId != -1)
+                {
+                    //...Log Proximity
+                    if (logRep.LogMovement(ins))
+                        return Content(CommonStrings.Success, "text/html");
+                    else
+                        return Content(CommonStrings.Error_DBFail, "text/html");
+                }
+                else
+                {
+                    return Content(CommonStrings.Error_AnimalNotConnectedToDevice, "text/html");
+                }
+
+            }
+            else
+            {
+                return Content(CommonStrings.Error_Invaild_DeviceAddress, "text/html");
+            }
+
+
+            return Content(CommonStrings.Error, "text/html");
+        }
     }
 }

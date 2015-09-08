@@ -4,40 +4,42 @@
 <%@ Import Namespace="Wetu_GUI.Controllers" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-    Data Logs
+    Artificial Insemination
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="HeaderContent" runat="server">
-    - Data Logs
+    - Artificial Insemination
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <% Html.Telerik().TabStrip()
-           .Name("LogTabs")
+           .Name("TubeTab")
            .Items(item => 
                {
                    item.Add()
-                       .Text("Proximity Log")
+                       .Text("Insemination Tubes")
                        .Content(() =>
                        {
                            %>
-                           <% Html.Telerik().Grid<ProximityLog>()
-                                           .Name("ProximityGrid")
+                           <% Html.Telerik().Grid<InseminationTube>()
+                                           .Name("TubeGrid")
                                            .Columns(column =>
                                            {
-                                               //column.Bound(model => model.ProximityId);
-                                               column.Bound(model => model._AnimalConnectedTo);
-                                               column.Bound(model => model._DeviceConnectedTo);
-                                               column.Bound(model => model._AnimalInProximity);           
-                                               column.Bound(model => model._DeviceInProximity);           
-                                               column.Bound(model => model.SecondsConnected);
-                                               column.Bound(model => model.LogDate).Format("{0:yyyy-MM-dd @ HH:mm}");
+                                               column.Bound(model => model.TubeId);
+                                               column.Bound(model => model._FromAnimal);
+                                               column.Bound(model => model.CreatedDate).Format("{0:yyyy-MM-dd @ HH:mm}");
+                                               column.Bound(model => model._User);
+                                               column.Bound(model => model.Used);
+                                               column.Bound(model => model.Success);           
+                                               column.Bound(model => model._UsedOnAnimal);
+                                               column.Bound(model => model.ModifiedDate).Format("{0:yyyy-MM-dd @ HH:mm}");           
                                                column.Bound(model => model._Company);
+                                               
                                            })
                                            .DataBinding(db => 
                                                {
                                                    db.Ajax()
-                                                        .Select("_ListProximityLog", "Log");
+                                                        .Select("_ListInseminationTubes", "AI");
                                                })
                                            .Pageable(page => page.PageSize(100))
                                            .Sortable()
@@ -47,25 +49,26 @@
                        });
                        
                    item.Add()
-                       .Text("Movement Log")
+                       .Text("Birth History")
                        .Content(() =>
                        {
                            %> 
-                           <% Html.Telerik().Grid<MovementLog>()
-                                           .Name("MovementGrid")
+                           <% Html.Telerik().Grid<BirthHistory>()
+                                           .Name("HistoryGrid")
                                            .Columns(column =>
                                            {
-                                               //column.Bound(model => model.MovementId);
-                                               column.Bound(model => model._AnimalName);
-                                               column.Bound(model => model._DeviceAddress);
-                                               column.Bound(model => model._Axis);            
-                                               column.Bound(model => model.LogDate).Format("{0:yyyy-MM-dd @ HH:mm}");
+                                               column.Bound(m => m._BirthType);
+                                               column.Bound(m => m._Child);
+                                               column.Bound(m => m._MaleParent);
+                                               column.Bound(m => m.TubeId);
+                                               column.Bound(m => m.Success);
+                                               column.Bound(model => model.ModifiedDate).Format("{0:yyyy-MM-dd @ HH:mm}");
                                                column.Bound(model => model._Company);
                                            })
                                            .DataBinding(db => 
                                                {
                                                    db.Ajax()
-                                                        .Select("_ListMovementLog", "Log");
+                                                        .Select("_ListBirthHistory", "AI");
                                                })
                                            .Pageable(page => page.PageSize(100))
                                            .Sortable()

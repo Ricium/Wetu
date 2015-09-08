@@ -242,6 +242,217 @@ namespace Wetu_GUI.Models
 
             return ReturnObject;
         }
+
+        public List<MovementLog> GetMovementLog()
+        {
+            List<MovementLog> ReturnObject = new List<MovementLog>();
+            MovementLog ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetMovementLog + " @Companies", con))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("Item", typeof(int));
+
+                    foreach (int item in companies)
+                        table.Rows.Add(item);
+
+                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                    pList.TypeName = "dbo.IntList";
+                    pList.Value = table;
+
+                    cmd.Parameters.Add(pList);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            ins = new MovementLog();
+                            ins.MovementId = Convert.ToInt32(drI["MovementId"]);
+                            ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                            ins.DeviceId = Convert.ToInt32(drI["DeviceId"]);
+                            ins.AxisId = Convert.ToInt32(drI["AxisId"]);
+                            ins.LogDate = Convert.ToDateTime(drI["LogDate"]);
+                            ins._AnimalName = drI["AnimalName"].ToString();
+                            ins._Axis = drI["Axis"].ToString();
+                            ins._Company = drI["Company"].ToString();
+                            ins._DeviceAddress = drI["DeviceAddress"].ToString();
+
+                            ReturnObject.Add(ins);
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
+
+        public List<InseminationTube> GetInseminationTubes()
+        {
+            List<InseminationTube> ReturnObject = new List<InseminationTube>();
+            InseminationTube ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetInseminationTubes + " @Companies", con))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("Item", typeof(int));
+
+                    foreach (int item in companies)
+                        table.Rows.Add(item);
+
+                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                    pList.TypeName = "dbo.IntList";
+                    pList.Value = table;
+
+                    cmd.Parameters.Add(pList);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            ins = new InseminationTube();
+                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                            ins.AnimalFromId = Convert.ToInt32(drI["AnimalId"]);
+                            ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                            ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                            ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                            ins.CreatedDate = Convert.ToDateTime(drI["CreatedDate"]);
+                            ins._FromAnimal = drI["OwnerAnimal"].ToString();
+                            ins._User = drI["Username"].ToString();
+                            ins._Company = drI["Company"].ToString();
+                            ins.Used = Convert.ToBoolean(drI["Used"]);
+                            ins.Success = Convert.ToBoolean(drI["Success"]);
+                            ins.AnimalUsedId = Convert.ToInt32(drI["UsedOnAnimalId"]);
+                            ins._UsedOnAnimal = drI["UsedOnAnimal"].ToString();
+
+                            ReturnObject.Add(ins);
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
+
+        public List<BirthHistory> GetBirthHistories()
+        {
+            List<BirthHistory> ReturnObject = new List<BirthHistory>();
+            BirthHistory ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetBirthHistories + " @Companies", con))
+                {
+                    var table = new DataTable();
+                    table.Columns.Add("Item", typeof(int));
+
+                    foreach (int item in companies)
+                        table.Rows.Add(item);
+
+                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                    pList.TypeName = "dbo.IntList";
+                    pList.Value = table;
+
+                    cmd.Parameters.Add(pList);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            ins = new BirthHistory();
+                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                            ins.MaleParentId = Convert.ToInt32(drI["MaleParentId"]);
+                            ins.FemaleParentId = Convert.ToInt32(drI["FemaleParentId"]);
+                            ins.ChildId = Convert.ToInt32(drI["ChildId"]);
+                            ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                            ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                            ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                            ins._User = drI["Username"].ToString();
+                            ins._Company = drI["Company"].ToString();
+                            ins.Success = Convert.ToBoolean(drI["Success"]);
+                            ins._MaleParent = drI["_MaleParent"].ToString();
+                            ins._FemaleParent = drI["_FemaleParent"].ToString();
+                            ins._Child = drI["_Child"].ToString();
+                            ins.BirthTypeId = Convert.ToInt32(drI["BirthTypeId"]);
+                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                            ins._BirthType = drI["BirthType"].ToString();
+
+                            ReturnObject.Add(ins);
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
+
+        public List<BirthHistory> GetBirthHistories(int AnimalId)
+        {
+            List<BirthHistory> ReturnObject = new List<BirthHistory>();
+            BirthHistory ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetBirthHistoryForAnimal + " @AnimalId", con))
+                {
+
+                    cmd.Parameters.AddWithValue("@AnimalId", AnimalId);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            ins = new BirthHistory();
+                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                            ins.MaleParentId = Convert.ToInt32(drI["MaleParentId"]);
+                            ins.FemaleParentId = Convert.ToInt32(drI["FemaleParentId"]);
+                            ins.ChildId = Convert.ToInt32(drI["ChildId"]);
+                            ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                            ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                            ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                            ins._User = drI["Username"].ToString();
+                            ins._Company = drI["Company"].ToString();
+                            ins.Success = Convert.ToBoolean(drI["Success"]);
+                            ins._MaleParent = drI["_MaleParent"].ToString();
+                            ins._FemaleParent = drI["_FemaleParent"].ToString();
+                            ins._Child = drI["_Child"].ToString();
+                            ins.BirthTypeId = Convert.ToInt32(drI["BirthTypeId"]);
+                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                            ins._BirthType = drI["BirthType"].ToString();
+
+                            ReturnObject.Add(ins);
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
         #endregion
 
         #region Drop Down Lists

@@ -296,6 +296,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UploadLocalization.zh-CN.resx</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\AIController.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\DropDownController.cs" />
     <Compile Include="Controllers\HerdController.cs" />
@@ -311,9 +312,12 @@
     <Compile Include="Models\DataModels\AccountModels.cs" />
     <Compile Include="Models\DataModels\Animal.cs" />
     <Compile Include="Models\DataModels\AnimalType.cs" />
+    <Compile Include="Models\DataModels\BirthHistory.cs" />
     <Compile Include="Models\DataModels\BirthType.cs" />
     <Compile Include="Models\DataModels\Company.cs" />
     <Compile Include="Models\DataModels\Device.cs" />
+    <Compile Include="Models\DataModels\InseminationTube.cs" />
+    <Compile Include="Models\DataModels\MovementLog.cs" />
     <Compile Include="Models\DataModels\ProximityLog.cs" />
     <Compile Include="Models\DataModels\User.cs" />
     <Compile Include="Models\Repositories\AccountRepository.cs" />
@@ -629,6 +633,7 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Views\Account\RegisterCompany.aspx" />
     <Content Include="Views\Account\RegisterUser.aspx" />
+    <Content Include="Views\AI\Index.aspx" />
     <Content Include="Views\Device\Index.aspx" />
     <Content Include="Views\Herd\Index.aspx" />
     <Content Include="Views\Herd\Tag.aspx" />

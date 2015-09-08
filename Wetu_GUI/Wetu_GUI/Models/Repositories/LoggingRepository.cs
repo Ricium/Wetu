@@ -126,5 +126,58 @@ namespace Wetu_GUI.Models
 
             return success;
         }
+
+        public bool LogMovement(MovementLog ins)
+        {
+            bool success = false;
+
+            MovementLog ReturnObject = new MovementLog();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertMovementLog;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@AnimalId", ins.AnimalId);
+                cmdI.Parameters.AddWithValue("@DeviceId", ins.DeviceId);
+                cmdI.Parameters.AddWithValue("@AxisId", ins.AxisId);
+                cmdI.Parameters.AddWithValue("@LogDate", DateTime.Now);
+
+                ins.MovementId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
+            }
+
+            if (ins.MovementId != 0)
+                success = true;
+
+            return success;
+        }
     }
 }

@@ -407,6 +407,47 @@
                                 </table>
                            <%
                        });
+
+                   if (Model._Sex.Equals("Female"))
+                   {
+                       item.Add()
+                       .Text("Birthing History")
+                       .Content(() =>
+                       {
+                           %> 
+                                <% Html.Telerik().Grid<BirthHistory>()
+                                           .Name("HistoryGrid")
+                                           .Columns(column =>
+                                           {
+                                               column.Bound(m => m._BirthType);
+                                               column.Bound(m => m._Child);
+                                               column.Bound(m => m._MaleParent);
+                                               column.Bound(m => m.TubeId);
+                                               column.Bound(m => m.Success);
+                                           })
+                                           .DataBinding(db => 
+                                               {
+                                                   db.Ajax()
+                                                        .Select("_ListBirthHistories", "Herd", new { AnimalId = Model.AnimalId });
+                                               })
+                                           .Pageable(page => page.PageSize(100))
+                                           .Sortable()
+                                           .Scrollable(scroll => scroll.Height(250))
+                                           .Render();
+                            %>
+                           <%
+                       });
+                       
+                       item.Add()
+                       .Text("Artificial Insemination")
+                       .Content(() =>
+                       {
+                           %> 
+                                AI Tubes History Here
+                           <%
+                       });
+                   }
+    
                }) 
             .SelectedIndex(0)
             .Effects(ef => ef.Expand().OpenDuration(500).CloseDuration(500))

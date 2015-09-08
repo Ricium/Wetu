@@ -72,6 +72,14 @@ namespace Wetu_GUI
         public static string GetAnimalIdFromDevice = "usp_t_AnimalSelectFromDeviceId";
         public static string InsertProximityLog = "usp_t_ProximityInsert";
         public static string GetProximityLog = "usp_t_ProximitySelectAll";
+        public static string GetMovementLog = "usp_t_MovementSelectAll";
+        public static string InsertMovementLog = "usp_t_MovementInsert";
+        #endregion
+
+        #region Artificial Insemination
+        public static string GetInseminationTubes = "usp_t_SpermbankSelectAll";
+        public static string GetBirthHistories = "usp_t_BirthHistorySelectAll";
+        public static string GetBirthHistoryForAnimal = "usp_t_BirthHistorySelectPerAnimal";
         #endregion
 
         #region Web Return Codes
@@ -83,6 +91,9 @@ namespace Wetu_GUI
         public static string Error_DeviceReceivedNotConnectedToAnimal = "6";
         public static string Error_DeviceConnectedNotConnectedToAnimal = "7";
         public static string Error = "-1";
+
+        public static string Error_Invaild_DeviceAddress = "8";
+        public static string Error_AnimalNotConnectedToDevice = "9";
         #endregion
 
         #region Alternative Selects

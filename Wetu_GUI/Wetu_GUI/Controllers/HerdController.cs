@@ -22,6 +22,13 @@ namespace Wetu_GUI.Controllers
             return Json(new GridModel(list));
         }
 
+        [GridAction]
+        public JsonResult _ListBirthHistories(int AnimalId)
+        {
+            List<BirthHistory> list = commonRep.GetBirthHistories(AnimalId);
+            return Json(new GridModel(list));
+        }
+
         [AcceptVerbs(HttpVerbs.Post)]
         [GridAction]
         public JsonResult _InsertAnimal(Animal ins)

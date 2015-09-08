@@ -2,15 +2,14 @@
 
 <nav>
     <ul id="menu">
-        
-        
         <%
-    if (Request.IsAuthenticated) {
+            if ((Request.IsAuthenticated) && (HttpContext.Current.Session["CompanyIds"] != null)) {
 %>      <li><%: Html.ActionLink("Home", "Home", "Home")%></li>
         <li><%: Html.ActionLink("Herd", "Index", "Herd")%></li>
         <li><%: Html.ActionLink("Devices", "Index", "Device")%></li>
         <li><%: Html.ActionLink("Users", "Index", "User")%></li>
-        <li><%: Html.ActionLink("Proximity Log", "Index", "Log")%></li>
+        <li><%: Html.ActionLink("Data Logs", "Index", "Log")%></li>
+        <li><%: Html.ActionLink("Artificial Insemination", "Index", "AI")%></li>
         <li><%: Html.ActionLink("Maintenance", "Index", "Maintenance")%></li>
         <li><%: Html.ActionLink("Log Off: " + Page.User.Identity.Name, "LogOff", "Account") %></li>
 <%
