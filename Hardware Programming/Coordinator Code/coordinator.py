@@ -20,12 +20,22 @@ def start_serial(PORT, BAUDRATE):
     print("Connected to: " + ser.portstr)
     return ser
 
-# Function to POST data to Remote Server
+# Function to POST Proximity data to Remote Server
 def postdata(URL, DEVICEA, DEVICEB, STARTTIME, ENDTIME):
     values = {'DeviceReceivedAddress' : DEVICEA,
               'DeviceConnectedAddress' : DEVICEB,
               'ConncetionStart': STARTTIME,
               'ConnectionEnd' : ENDTIME }
+    data = urllib.urlencode(values)
+    req = urllib2.Request(URL, data)
+    response = urllib2.urlopen(req)
+    the_page = response.read()
+    print the_page
+	
+# Function to POST Movement data to Remote Server
+def postdata_movement(URL, ADDRESS, AXIS):
+    values = {'DeviceAddress' : ADDRESS,
+              'Axis' : AXIS }
     data = urllib.urlencode(values)
     req = urllib2.Request(URL, data)
     response = urllib2.urlopen(req)
@@ -105,14 +115,22 @@ while True:
             print 'Node: ' + address + ' buffer is full'
             nodes.DeviceNodes[index].set_accel_data()
             acc = nodes.DeviceNodes[index].get_accel_data()
-            print acc
-            print 'X:' + acc.x
-            print 'Y:' + acc.x
-            print 'Z:' + acc.x
             try:
                 # Process data in Thread
                 process_thread = threading.Thread(target=process_node, args=(nodes.DeviceNodes[index],))
                 process_thread.start()
+
+                if acc.x == 'Y':
+                    movement_thread = threading.Thread(target=postdata_movement, args=(address, 1,))
+                    movement_thread.start()
+
+                if acc.y == 'Y':
+                    movement_thread = threading.Thread(target=postdata_movement, args=(address, 2,))
+                    movement_thread.start()
+
+                if acc.z == 'Y':
+                    movement_thread = threading.Thread(target=postdata_movement, args=(address, 3,))
+                    movement_thread.start()
             except:
                 print "Error: Unable to Start Thread: Process_Thread"
 
