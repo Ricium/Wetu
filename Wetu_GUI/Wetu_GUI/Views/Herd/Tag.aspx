@@ -416,7 +416,7 @@
                        {
                            %> 
                                 <% Html.Telerik().Grid<BirthHistory>()
-                                           .Name("HistoryGrid")
+                                           .Name("BirthHistoryGrid")
                                            .Columns(column =>
                                            {
                                                column.Bound(m => m._BirthType);
@@ -443,7 +443,25 @@
                        .Content(() =>
                        {
                            %> 
-                                AI Tubes History Here
+                                <% Html.Telerik().Grid<InseminationHistory>()
+                                           .Name("InseminationHistoryGrid")
+                                           .Columns(column =>
+                                           {
+                                               column.Bound(m => m.TubeId);
+                                               column.Bound(m => m._AnimalName);
+                                               column.Bound(m => m.ModifiedDate).Format("{0:yyyy-MM-dd}"); 
+                                               column.Bound(m => m._Username);
+                                           })
+                                           .DataBinding(db => 
+                                               {
+                                                   db.Ajax()
+                                                        .Select("_ListInseminationHistory", "Herd", new { AnimalId = Model.AnimalId });
+                                               })
+                                           .Pageable(page => page.PageSize(100))
+                                           .Sortable()
+                                           .Scrollable(scroll => scroll.Height(250))
+                                           .Render();
+                            %>
                            <%
                        });
                    }

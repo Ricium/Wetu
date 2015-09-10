@@ -10,6 +10,28 @@ namespace Wetu_GUI.Models
 {
     public class CommonRepository
     {
+        #region Helper Functions
+        public DataTable GetCompaniesDBVariable()
+        {
+            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+
+            var table = new DataTable();
+            table.Columns.Add("Item", typeof(int));
+
+            if (companies != null)
+            {
+                foreach (int item in companies)
+                    table.Rows.Add(item);
+
+                return table;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        #endregion
+
         #region Grid Selects
         public List<AnimalType> GetAnimalTypes()
         {
@@ -86,41 +108,38 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetDevices + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetDevices + " @Companies", con))
                     {
-                        while (drI.Read())
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
                         {
-                            ins = new Device();
-                            ins.DeviceId = Convert.ToInt32(drI["DeviceId"]);
-                            ins.Address = drI["Address"].ToString();
-                            ins.CreatedDate = Convert.ToDateTime(drI["CreatedDate"]);
-                            ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
-                            ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
-                            ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
-                            ins.Removed = Convert.ToBoolean(drI["Removed"]);
-                            ins._Company = drI["CompanyName"].ToString();
-                            ins._ModifiedBy = drI["Username"].ToString();
-                            ReturnObject.Add(ins);
+                            while (drI.Read())
+                            {
+                                ins = new Device();
+                                ins.DeviceId = Convert.ToInt32(drI["DeviceId"]);
+                                ins.Address = drI["Address"].ToString();
+                                ins.CreatedDate = Convert.ToDateTime(drI["CreatedDate"]);
+                                ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                                ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                                ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                                ins.Removed = Convert.ToBoolean(drI["Removed"]);
+                                ins._Company = drI["CompanyName"].ToString();
+                                ins._ModifiedBy = drI["Username"].ToString();
+                                ReturnObject.Add(ins);
+                            }
                         }
                     }
                 }
@@ -136,49 +155,46 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetAnimals + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetAnimals + " @Companies", con))
                     {
-                        while (drI.Read())
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
                         {
-                            ins = new Animal();
-                            ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
-                            ins.AnimalTypeId = Convert.ToInt32(drI["AnimalTypeId"]);
-                            ins.BirthDate = Convert.ToDateTime(drI["Birthdate"]);
-                            ins.CreatedDate = Convert.ToDateTime(drI["CreatedDate"]);
-                            ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
-                            ins.DecriptiveName = drI["DecriptiveName"].ToString();
-                            ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
-                            ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
-                            ins.Removed = Convert.ToBoolean(drI["Removed"]);
-                            ins.SexId = Convert.ToInt32(drI["SexId"]);
-                            ins.TagNumber = drI["TagNumber"].ToString();
-                            ins._AnimalType = drI["Species"].ToString();
-                            ins._Company = drI["Company"].ToString();
-                            ins._ModifiedBy = drI["Username"].ToString();
-                            ins._Sex = drI["Sex"].ToString();
-                            ins.DeviceId = Convert.ToInt32(drI["DeviceId"]);
-                            ins._Address = drI["DeviceAddress"].ToString();
-                            ReturnObject.Add(ins);
+                            while (drI.Read())
+                            {
+                                ins = new Animal();
+                                ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                                ins.AnimalTypeId = Convert.ToInt32(drI["AnimalTypeId"]);
+                                ins.BirthDate = Convert.ToDateTime(drI["Birthdate"]);
+                                ins.CreatedDate = Convert.ToDateTime(drI["CreatedDate"]);
+                                ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                                ins.DecriptiveName = drI["DecriptiveName"].ToString();
+                                ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                                ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                                ins.Removed = Convert.ToBoolean(drI["Removed"]);
+                                ins.SexId = Convert.ToInt32(drI["SexId"]);
+                                ins.TagNumber = drI["TagNumber"].ToString();
+                                ins._AnimalType = drI["Species"].ToString();
+                                ins._Company = drI["Company"].ToString();
+                                ins._ModifiedBy = drI["Username"].ToString();
+                                ins._Sex = drI["Sex"].ToString();
+                                ins.DeviceId = Convert.ToInt32(drI["DeviceId"]);
+                                ins._Address = drI["DeviceAddress"].ToString();
+                                ReturnObject.Add(ins);
+                            }
                         }
                     }
                 }
@@ -194,52 +210,48 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetProximityLog + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetProximityLog + " @Companies", con))
                     {
-                        while (drI.Read())
-                        {
-                            ins = new ProximityLog();
-                            ins.ProximityId = Convert.ToInt32(drI["ProximityId"]);
-                            ins.AnimalConnectedTo = Convert.ToInt32(drI["AnimalConnectedTo"]);
-                            ins.AnimalInProximity = Convert.ToInt32(drI["AnimalInProximity"]);
-                            ins.DeviceConnectedTo = Convert.ToInt32(drI["DeviceConnectedTo"]);
-                            ins.DeviceInProximity = Convert.ToInt32(drI["DeviceInProximity"]);
-                            ins.LogDate = Convert.ToDateTime(drI["LogDate"]);
-                            ins.ProximityEnded = Convert.ToDateTime(drI["ProximityEnded"]);
-                            ins.ProximityStarted = Convert.ToDateTime(drI["ProximityStarted"]);
-                            ins._AnimalConnectedTo = drI["AnimalA"].ToString();
-                            ins._AnimalInProximity = drI["AnimalB"].ToString();
-                            ins._Company = drI["Company"].ToString();
-                            ins._DeviceConnectedTo = drI["DeviceA"].ToString();
-                            ins._DeviceInProximity = drI["DeviceB"].ToString();
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
 
-                            ins.SecondsConnected = Math.Round((ins.ProximityEnded - ins.ProximityStarted).TotalSeconds,2);
-                            ReturnObject.Add(ins);
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new ProximityLog();
+                                ins.ProximityId = Convert.ToInt32(drI["ProximityId"]);
+                                ins.AnimalConnectedTo = Convert.ToInt32(drI["AnimalConnectedTo"]);
+                                ins.AnimalInProximity = Convert.ToInt32(drI["AnimalInProximity"]);
+                                ins.DeviceConnectedTo = Convert.ToInt32(drI["DeviceConnectedTo"]);
+                                ins.DeviceInProximity = Convert.ToInt32(drI["DeviceInProximity"]);
+                                ins.LogDate = Convert.ToDateTime(drI["LogDate"]);
+                                ins.ProximityEnded = Convert.ToDateTime(drI["ProximityEnded"]);
+                                ins.ProximityStarted = Convert.ToDateTime(drI["ProximityStarted"]);
+                                ins._AnimalConnectedTo = drI["AnimalA"].ToString();
+                                ins._AnimalInProximity = drI["AnimalB"].ToString();
+                                ins._Company = drI["Company"].ToString();
+                                ins._DeviceConnectedTo = drI["DeviceA"].ToString();
+                                ins._DeviceInProximity = drI["DeviceB"].ToString();
+
+                                ins.SecondsConnected = Math.Round((ins.ProximityEnded - ins.ProximityStarted).TotalSeconds, 2);
+                                ReturnObject.Add(ins);
+                            }
                         }
                     }
                 }
             }
-
             return ReturnObject;
         }
 
@@ -250,42 +262,39 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetMovementLog + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetMovementLog + " @Companies", con))
                     {
-                        while (drI.Read())
-                        {
-                            ins = new MovementLog();
-                            ins.MovementId = Convert.ToInt32(drI["MovementId"]);
-                            ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
-                            ins.DeviceId = Convert.ToInt32(drI["DeviceId"]);
-                            ins.AxisId = Convert.ToInt32(drI["AxisId"]);
-                            ins.LogDate = Convert.ToDateTime(drI["LogDate"]);
-                            ins._AnimalName = drI["AnimalName"].ToString();
-                            ins._Axis = drI["Axis"].ToString();
-                            ins._Company = drI["Company"].ToString();
-                            ins._DeviceAddress = drI["DeviceAddress"].ToString();
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
 
-                            ReturnObject.Add(ins);
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new MovementLog();
+                                ins.MovementId = Convert.ToInt32(drI["MovementId"]);
+                                ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                                ins.DeviceId = Convert.ToInt32(drI["DeviceId"]);
+                                ins.AxisId = Convert.ToInt32(drI["AxisId"]);
+                                ins.LogDate = Convert.ToDateTime(drI["LogDate"]);
+                                ins._AnimalName = drI["AnimalName"].ToString();
+                                ins._Axis = drI["Axis"].ToString();
+                                ins._Company = drI["Company"].ToString();
+                                ins._DeviceAddress = drI["DeviceAddress"].ToString();
+
+                                ReturnObject.Add(ins);
+                            }
                         }
                     }
                 }
@@ -301,46 +310,43 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetInseminationTubes + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetInseminationTubes + " @Companies", con))
                     {
-                        while (drI.Read())
-                        {
-                            ins = new InseminationTube();
-                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
-                            ins.AnimalFromId = Convert.ToInt32(drI["AnimalId"]);
-                            ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
-                            ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
-                            ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
-                            ins.CreatedDate = Convert.ToDateTime(drI["CreatedDate"]);
-                            ins._FromAnimal = drI["OwnerAnimal"].ToString();
-                            ins._User = drI["Username"].ToString();
-                            ins._Company = drI["Company"].ToString();
-                            ins.Used = Convert.ToBoolean(drI["Used"]);
-                            ins.Success = Convert.ToBoolean(drI["Success"]);
-                            ins.AnimalUsedId = Convert.ToInt32(drI["UsedOnAnimalId"]);
-                            ins._UsedOnAnimal = drI["UsedOnAnimal"].ToString();
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
 
-                            ReturnObject.Add(ins);
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new InseminationTube();
+                                ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                                ins.AnimalFromId = Convert.ToInt32(drI["AnimalId"]);
+                                ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                                ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                                ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                                ins.CreatedDate = Convert.ToDateTime(drI["CreatedDate"]);
+                                ins._FromAnimal = drI["OwnerAnimal"].ToString();
+                                ins._User = drI["Username"].ToString();
+                                ins._Company = drI["Company"].ToString();
+                                ins.Used = Convert.ToBoolean(drI["Used"]);
+                                ins.Success = Convert.ToBoolean(drI["Success"]);
+                                ins.AnimalUsedId = Convert.ToInt32(drI["UsedOnAnimalId"]);
+                                ins._UsedOnAnimal = drI["UsedOnAnimal"].ToString();
+
+                                ReturnObject.Add(ins);
+                            }
                         }
                     }
                 }
@@ -356,49 +362,46 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetBirthHistories + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetBirthHistories + " @Companies", con))
                     {
-                        while (drI.Read())
-                        {
-                            ins = new BirthHistory();
-                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
-                            ins.MaleParentId = Convert.ToInt32(drI["MaleParentId"]);
-                            ins.FemaleParentId = Convert.ToInt32(drI["FemaleParentId"]);
-                            ins.ChildId = Convert.ToInt32(drI["ChildId"]);
-                            ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
-                            ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
-                            ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
-                            ins._User = drI["Username"].ToString();
-                            ins._Company = drI["Company"].ToString();
-                            ins.Success = Convert.ToBoolean(drI["Success"]);
-                            ins._MaleParent = drI["_MaleParent"].ToString();
-                            ins._FemaleParent = drI["_FemaleParent"].ToString();
-                            ins._Child = drI["_Child"].ToString();
-                            ins.BirthTypeId = Convert.ToInt32(drI["BirthTypeId"]);
-                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
-                            ins._BirthType = drI["BirthType"].ToString();
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
 
-                            ReturnObject.Add(ins);
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new BirthHistory();
+                                ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                                ins.MaleParentId = Convert.ToInt32(drI["MaleParentId"]);
+                                ins.FemaleParentId = Convert.ToInt32(drI["FemaleParentId"]);
+                                ins.ChildId = Convert.ToInt32(drI["ChildId"]);
+                                ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                                ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                                ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                                ins._User = drI["Username"].ToString();
+                                ins._Company = drI["Company"].ToString();
+                                ins.Success = Convert.ToBoolean(drI["Success"]);
+                                ins._MaleParent = drI["_MaleParent"].ToString();
+                                ins._FemaleParent = drI["_FemaleParent"].ToString();
+                                ins._Child = drI["_Child"].ToString();
+                                ins.BirthTypeId = Convert.ToInt32(drI["BirthTypeId"]);
+                                ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                                ins._BirthType = drI["BirthType"].ToString();
+
+                                ReturnObject.Add(ins);
+                            }
                         }
                     }
                 }
@@ -420,7 +423,6 @@ namespace Wetu_GUI.Models
 
                 using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetBirthHistoryForAnimal + " @AnimalId", con))
                 {
-
                     cmd.Parameters.AddWithValue("@AnimalId", AnimalId);
 
                     using (var drI = cmd.ExecuteReader())
@@ -444,6 +446,93 @@ namespace Wetu_GUI.Models
                             ins.BirthTypeId = Convert.ToInt32(drI["BirthTypeId"]);
                             ins.TubeId = Convert.ToInt32(drI["TubeId"]);
                             ins._BirthType = drI["BirthType"].ToString();
+
+                            ReturnObject.Add(ins);
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
+
+        public List<InseminationHistory> GetInseminationHistories()
+        {
+            List<InseminationHistory> ReturnObject = new List<InseminationHistory>();
+            InseminationHistory ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            var table = GetCompaniesDBVariable();
+
+            if (table != null)
+            {
+                using (var con = dbConn.SqlConn())
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetTubeHistories + " @Companies", con))
+                    {
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new InseminationHistory();
+                                ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                                ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                                ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                                ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                                ins._Username = drI["Username"].ToString();
+                                ins._Company = drI["Company"].ToString();
+                                ins._AnimalName = drI["Animal"].ToString();
+                                ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                                ins.HistoryId = Convert.ToInt32(drI["HistoryId"]);
+                                
+                                ReturnObject.Add(ins);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
+
+        public List<InseminationHistory> GetInseminationHistories(int AnimalId)
+        {
+            List<InseminationHistory> ReturnObject = new List<InseminationHistory>();
+            InseminationHistory ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetTubeHistoryForAnimal + " @AnimalId", con))
+                {
+                    cmd.Parameters.AddWithValue("@AnimalId", AnimalId);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            ins = new InseminationHistory();
+                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                            ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                            ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                            ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                            ins._Username = drI["Username"].ToString();
+                            ins._Company = drI["Company"].ToString();
+                            ins._AnimalName = drI["Animal"].ToString();
+                            ins.AnimalId = Convert.ToInt32(drI["AnimalId"]);
+                            ins.HistoryId = Convert.ToInt32(drI["HistoryId"]);
 
                             ReturnObject.Add(ins);
                         }
@@ -588,34 +677,31 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetDeviceDropDown + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetDeviceDropDown + " @Companies", con))
                     {
-                        while (drI.Read())
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
                         {
-                            ins = new SelectListItem();
-                            ins.Text = drI["Address"].ToString();
-                            ins.Value = drI["DeviceId"].ToString();
-                            ReturnObject.Add(ins);
+                            while (drI.Read())
+                            {
+                                ins = new SelectListItem();
+                                ins.Text = drI["Address"].ToString();
+                                ins.Value = drI["DeviceId"].ToString();
+                                ReturnObject.Add(ins);
+                            }
                         }
                     }
                 }
@@ -631,34 +717,31 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetMaleAnimalsDropDown + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetMaleAnimalsDropDown + " @Companies", con))
                     {
-                        while (drI.Read())
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
                         {
-                            ins = new SelectListItem();
-                            ins.Text = drI["DropDownName"].ToString();
-                            ins.Value = drI["AnimalId"].ToString();
-                            ReturnObject.Add(ins);
+                            while (drI.Read())
+                            {
+                                ins = new SelectListItem();
+                                ins.Text = drI["DropDownName"].ToString();
+                                ins.Value = drI["AnimalId"].ToString();
+                                ReturnObject.Add(ins);
+                            }
                         }
                     }
                 }
@@ -674,37 +757,34 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetMaleAnimalsDropDown + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetMaleAnimalsDropDown + " @Companies", con))
                     {
-                        while (drI.Read())
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
                         {
-                            if (Convert.ToInt32(drI["AnimalId"]) != AnimalId)
+                            while (drI.Read())
                             {
-                                ins = new SelectListItem();
-                                ins.Text = drI["DropDownName"].ToString();
-                                ins.Value = drI["AnimalId"].ToString();
-                                ReturnObject.Add(ins);
-                            }                            
+                                if (Convert.ToInt32(drI["AnimalId"]) != AnimalId)
+                                {
+                                    ins = new SelectListItem();
+                                    ins.Text = drI["DropDownName"].ToString();
+                                    ins.Value = drI["AnimalId"].ToString();
+                                    ReturnObject.Add(ins);
+                                }
+                            }
                         }
                     }
                 }
@@ -720,34 +800,31 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetFemaleAnimalsDropDown + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetFemaleAnimalsDropDown + " @Companies", con))
                     {
-                        while (drI.Read())
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
                         {
-                            ins = new SelectListItem();
-                            ins.Text = drI["DropDownName"].ToString();
-                            ins.Value = drI["AnimalId"].ToString();
-                            ReturnObject.Add(ins);
+                            while (drI.Read())
+                            {
+                                ins = new SelectListItem();
+                                ins.Text = drI["DropDownName"].ToString();
+                                ins.Value = drI["AnimalId"].ToString();
+                                ReturnObject.Add(ins);
+                            }
                         }
                     }
                 }
@@ -763,42 +840,38 @@ namespace Wetu_GUI.Models
 
             DataBaseConnection dbConn = new DataBaseConnection();
 
-            List<int> companies = (List<int>)HttpContext.Current.Session["CompanyIds"];
+            var table = GetCompaniesDBVariable();
 
-            using (var con = dbConn.SqlConn())
+            if (table != null)
             {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetFemaleAnimalsDropDown + " @Companies", con))
+                using (var con = dbConn.SqlConn())
                 {
-                    var table = new DataTable();
-                    table.Columns.Add("Item", typeof(int));
+                    con.Open();
 
-                    foreach (int item in companies)
-                        table.Rows.Add(item);
-
-                    var pList = new SqlParameter("@Companies", SqlDbType.Structured);
-                    pList.TypeName = "dbo.IntList";
-                    pList.Value = table;
-
-                    cmd.Parameters.Add(pList);
-
-                    using (var drI = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetFemaleAnimalsDropDown + " @Companies", con))
                     {
-                        while (drI.Read())
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
                         {
-                            if (Convert.ToInt32(drI["AnimalId"]) != AnimalId)
+                            while (drI.Read())
                             {
-                                ins = new SelectListItem();
-                                ins.Text = drI["DropDownName"].ToString();
-                                ins.Value = drI["AnimalId"].ToString();
-                                ReturnObject.Add(ins);
+                                if (Convert.ToInt32(drI["AnimalId"]) != AnimalId)
+                                {
+                                    ins = new SelectListItem();
+                                    ins.Text = drI["DropDownName"].ToString();
+                                    ins.Value = drI["AnimalId"].ToString();
+                                    ReturnObject.Add(ins);
+                                }
                             }
                         }
                     }
                 }
             }
-
             return ReturnObject;
         }
         #endregion

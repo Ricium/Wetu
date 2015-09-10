@@ -45,3 +45,4 @@ C:\dev\Wetu\Wetu_GUI\Wetu_GUI\obj\Debug\Wetu_GUI.dll
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\obj\Debug\Wetu_GUI.pdb
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\PushbulletSharp.dll
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\PushbulletSharp.pdb
+C:\dev\Wetu\Wetu_GUI\Wetu_GUI\obj\Debug\Wetu_GUI.csprojResolveAssemblyReference.cache

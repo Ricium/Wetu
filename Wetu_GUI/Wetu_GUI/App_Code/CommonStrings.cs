@@ -80,6 +80,8 @@ namespace Wetu_GUI
         public static string GetInseminationTubes = "usp_t_SpermbankSelectAll";
         public static string GetBirthHistories = "usp_t_BirthHistorySelectAll";
         public static string GetBirthHistoryForAnimal = "usp_t_BirthHistorySelectPerAnimal";
+        public static string GetTubeHistories = "usp_t_TubeHistorySelectAll";
+        public static string GetTubeHistoryForAnimal = "usp_t_TubeHistorySelectPerAnimal";
         #endregion
 
         #region Web Return Codes

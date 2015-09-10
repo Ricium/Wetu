@@ -316,6 +316,7 @@
     <Compile Include="Models\DataModels\BirthType.cs" />
     <Compile Include="Models\DataModels\Company.cs" />
     <Compile Include="Models\DataModels\Device.cs" />
+    <Compile Include="Models\DataModels\InseminationHistory.cs" />
     <Compile Include="Models\DataModels\InseminationTube.cs" />
     <Compile Include="Models\DataModels\MovementLog.cs" />
     <Compile Include="Models\DataModels\ProximityLog.cs" />
