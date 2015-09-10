@@ -28,13 +28,31 @@
             window.ajaxRequest("/Herd/_MotherAdd", { id: $('#AnimalId').val() });
             window.center();
             window.open();
-        }       
+        }
+
+        function PublicWindow() {
+            var window = $('#RegistrarWindow').data('tWindow');
+            window.ajaxRequest("/Herd/_AddPublic", { id: $('#AnimalId').val() });
+            window.center();
+            window.open();
+        }
     </script>
 
     <% Html.Telerik().Window()
             .Name("ParentWindow")
             .Modal(true)
             .Title("Add Parent")
+            .Content("<strong>Hello world!</strong>")
+            .Visible(false)
+            .Resizable()
+            .Draggable(true)
+            .Render();
+    %>
+
+    <% Html.Telerik().Window()
+            .Name("RegistrarWindow")
+            .Modal(true)
+            .Title("Add to Public Registrar")
             .Content("<strong>Hello world!</strong>")
             .Visible(false)
             .Resizable()
@@ -92,7 +110,7 @@
                                             <tr>
                                                 <td>Father:</td>
                                                 <td><% if(Model.MaleParent == null)
-                                                       { %> <button id="AddFather" onclick="FatherWindow()">Add</button>
+                                                       { %> <button id="AddFather" onclick="FatherWindow()" class="t-button">Add</button>
                                                     <% } else { %>
                                                     <%: Html.ActionLink(Model.MaleParent.DecriptiveName + " - " 
                                                                 + Model.MaleParent.TagNumber, "Tag"
@@ -103,7 +121,7 @@
                                             <tr>
                                                 <td>Mother:</td>
                                                 <td><% if(Model.FemaleParent == null)
-                                                       { %> <button id="AddMother" onclick="MotherWindow()">Add</button>
+                                                       { %> <button id="AddMother" onclick="MotherWindow()" class="t-button">Add</button>
                                                     <% } else { %>
                                                     <%: Html.ActionLink(Model.FemaleParent.DecriptiveName + " - " 
                                                                 + Model.FemaleParent.TagNumber, "Tag"
@@ -111,6 +129,20 @@
                                                 <% } %>
                                                 </td>
                                             </tr>
+                                            <% if(Model._Sex.Equals("Male"))
+                                               { %>
+                                            <tr>
+                                                <td>Public Registrar:</td>
+                                                <td>
+                                                    <% if(Model.PublicRegistrar.Equals(""))
+                                                       { %> <button id="AddPublicRegistrar" onclick="PublicWindow()" class="t-button">Add</button> 
+                                                    <% } else { %>
+                                                    <%: Html.DisplayFor(m => m.PublicRegistrar) %>
+                                                <% } %>
+                                                                                                       
+                                                </td>
+                                            </tr>
+                                            <% } %>
                                         </table>
                                     </td>
                                     <td style="vertical-align:top"> 
@@ -417,22 +449,36 @@
                            %> 
                                 <% Html.Telerik().Grid<BirthHistory>()
                                            .Name("BirthHistoryGrid")
+                                           .DataKeys(key =>
+                                           {
+                                               key.Add(k => k.HistoryId);
+                                               key.Add(k => k.FemaleParentId);
+                                           })
+                                           .ToolBar(command => command.Insert().ButtonType(GridButtonType.ImageAndText).Text("Add Birth"))
                                            .Columns(column =>
                                            {
                                                column.Bound(m => m._BirthType);
-                                               column.Bound(m => m._Child);
-                                               column.Bound(m => m._MaleParent);
+                                               column.Bound(m => m._Child).ClientTemplate("<a href=../Tag/<#= ChildId #>><#= _Child #></a>");
+                                               column.Bound(m => m._MaleParent).ClientTemplate("<a href=../Tag/<#= MaleParentId #>><#= _MaleParent #></a>");
                                                column.Bound(m => m.TubeId);
                                                column.Bound(m => m.Success);
+
+                                               column.Command(command =>
+                                               {
+                                                   command.Delete().ButtonType(GridButtonType.Image).Text("Remove");
+                                               }).Title("").Width(100);
                                            })
-                                           .DataBinding(db => 
+                                           .DataBinding(db =>
                                                {
                                                    db.Ajax()
-                                                        .Select("_ListBirthHistories", "Herd", new { AnimalId = Model.AnimalId });
+                                                        .Select("_ListBirthHistories", "Herd", new { AnimalId = Model.AnimalId })
+                                                        .Insert("_InsertBirthHistory", "Herd", new { AnimalId = Model.AnimalId })
+                                                        .Delete("_RemoveBirthHistory", "Herd", new { AnimalId = Model.AnimalId });
                                                })
                                            .Pageable(page => page.PageSize(100))
                                            .Sortable()
                                            .Scrollable(scroll => scroll.Height(250))
+                                           .Editable(edit => edit.Mode(GridEditMode.PopUp))
                                            .Render();
                             %>
                            <%
@@ -448,7 +494,7 @@
                                            .Columns(column =>
                                            {
                                                column.Bound(m => m.TubeId);
-                                               column.Bound(m => m._AnimalName);
+                                               column.Bound(m => m._AnimalName).ClientTemplate("<a href=../Tag/<#= AnimalId #>><#= _AnimalName #></a>");
                                                column.Bound(m => m.ModifiedDate).Format("{0:yyyy-MM-dd}"); 
                                                column.Bound(m => m._Username);
                                            })

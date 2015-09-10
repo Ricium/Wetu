@@ -397,7 +397,7 @@ namespace Wetu_GUI.Models
                                 ins._FemaleParent = drI["_FemaleParent"].ToString();
                                 ins._Child = drI["_Child"].ToString();
                                 ins.BirthTypeId = Convert.ToInt32(drI["BirthTypeId"]);
-                                ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                                ins.HistoryId = Convert.ToInt32(drI["HistoryId"]);
                                 ins._BirthType = drI["BirthType"].ToString();
 
                                 ReturnObject.Add(ins);
@@ -444,7 +444,7 @@ namespace Wetu_GUI.Models
                             ins._FemaleParent = drI["_FemaleParent"].ToString();
                             ins._Child = drI["_Child"].ToString();
                             ins.BirthTypeId = Convert.ToInt32(drI["BirthTypeId"]);
-                            ins.TubeId = Convert.ToInt32(drI["TubeId"]);
+                            ins.HistoryId = Convert.ToInt32(drI["HistoryId"]);
                             ins._BirthType = drI["BirthType"].ToString();
 
                             ReturnObject.Add(ins);
@@ -872,6 +872,151 @@ namespace Wetu_GUI.Models
                     }
                 }
             }
+            return ReturnObject;
+        }
+
+        public List<SelectListItem> GetInseminationTubesDropDownWithNone()
+        {
+            List<SelectListItem> ReturnObject = new List<SelectListItem>();
+            SelectListItem ins;
+
+            SelectListItem none = new SelectListItem();
+            none.Value = "0";
+            none.Text = "No Insemination Tube Used";
+            ReturnObject.Add(none);
+
+           DataBaseConnection dbConn = new DataBaseConnection();
+
+            var table = GetCompaniesDBVariable();
+
+            if (table != null)
+            {
+                using (var con = dbConn.SqlConn())
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetInseminationTubesDropDown + " @Companies", con))
+                    {
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new SelectListItem();
+                                ins.Value = drI["TubeId"].ToString();
+                                ins.Text = drI["TubeId"].ToString() + " - " + drI["Animal"].ToString();
+                                ReturnObject.Add(ins);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            return ReturnObject;
+        }
+
+        public List<SelectListItem> GetInseminationTubesDropDownSingle()
+        {
+            List<SelectListItem> ReturnObject = new List<SelectListItem>();
+
+            SelectListItem none = new SelectListItem();
+            none.Value = "0";
+            none.Text = "No Insemination Tube Used";
+            ReturnObject.Add(none);
+
+            return ReturnObject;
+        }
+
+        public List<SelectListItem> GetInseminationTubesDropDown()
+        {
+            List<SelectListItem> ReturnObject = new List<SelectListItem>();
+            SelectListItem ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            var table = GetCompaniesDBVariable();
+
+            if (table != null)
+            {
+                using (var con = dbConn.SqlConn())
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetInseminationTubesDropDown + " @Companies", con))
+                    {
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new SelectListItem();
+                                ins.Value = drI["TubeId"].ToString();
+                                ins.Text = drI["TubeId"].ToString() + " - " + drI["Animal"].ToString();
+                                ReturnObject.Add(ins);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            return ReturnObject;
+        }
+
+        public List<SelectListItem> GetAnimalsDropDown()
+        {
+            List<SelectListItem> ReturnObject = new List<SelectListItem>();
+            SelectListItem ins;
+
+            SelectListItem none = new SelectListItem();
+            none.Value = "0";
+            none.Text = "Unsuccessful Birth";
+            ReturnObject.Add(none);
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            var table = GetCompaniesDBVariable();
+
+            if (table != null)
+            {
+                using (var con = dbConn.SqlConn())
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetAnimals + " @Companies", con))
+                    {
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new SelectListItem();
+                                ins.Value = drI["AnimalId"].ToString();
+                                ins.Text = drI["DecriptiveName"].ToString();
+                                
+                                ReturnObject.Add(ins);
+                            }
+                        }
+                    }
+                }
+            }
+
             return ReturnObject;
         }
         #endregion

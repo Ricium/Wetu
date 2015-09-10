@@ -14,6 +14,7 @@ namespace Wetu_GUI.Controllers
     {
         private CommonRepository commonRep = new CommonRepository();
         private AnimalRepository animalRep = new AnimalRepository();
+        private AIRepository aiRep = new AIRepository();
 
         [GridAction]
         public JsonResult _ListAnimals()
@@ -86,6 +87,38 @@ namespace Wetu_GUI.Controllers
             return Json(new GridModel(commonRep.GetAnimals()));
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
+        [GridAction]
+        public JsonResult _InsertBirthHistory(BirthHistory ins, int AnimalId)
+        {
+            ins = aiRep.InsertBirthHistory(ins);
+
+            if ((ins.HistoryId != 0) && (ins.ChildId != 0))
+            {
+                AnimalRelationship father = new AnimalRelationship();
+                father.ParentAnimalId = ins.MaleParentId;
+                father.ChildAnimalId = ins.ChildId;
+                father = animalRep.InsertAnimalRelationship(father);
+
+                AnimalRelationship mother = new AnimalRelationship();
+                mother.ParentAnimalId = ins.FemaleParentId;
+                mother.ChildAnimalId = ins.ChildId;
+                mother = animalRep.InsertAnimalRelationship(mother);
+            }
+
+            return Json(new GridModel(commonRep.GetBirthHistories(AnimalId)));
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        [GridAction]
+        public JsonResult _RemoveBirthHistory(int id, int AnimalId)
+        {
+            BirthHistory toRemove = aiRep.GetBirthHistory(id);
+            aiRep.RemoveBirthHistory(toRemove);
+
+            return Json(new GridModel(commonRep.GetBirthHistories(AnimalId)));
+        }
+
         public ActionResult Index()
         {
             ViewData["Companies"] = commonRep.GetCompaniesDropDown();
@@ -116,12 +149,26 @@ namespace Wetu_GUI.Controllers
             return PartialView(ins);
         }
 
+        public ActionResult _AddPublic(int id)
+        {
+            PublicRegistrar ins = new PublicRegistrar(id);
+            return PartialView(ins);
+        }
+
         [HttpPost]
         public ActionResult _AddParent(AnimalRelationship ins)
         {
             ins = animalRep.InsertAnimalRelationship(ins);
 
             return RedirectToAction("Tag", new { id = ins.ChildAnimalId });
+        }
+
+        [HttpPost]
+        public ActionResult _AddPublicRegistrar(PublicRegistrar ins)
+        {
+            ins = animalRep.InsertPublicRegistrar(ins);
+
+            return RedirectToAction("Tag", new { id = ins.AnimalId });
         }
     }
 }

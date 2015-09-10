@@ -88,6 +88,7 @@ namespace Wetu_GUI.Models
                     ins._ModifiedBy = drI["Username"].ToString();
                     ins._Sex = drI["Sex"].ToString();
                     ins._Address = drI["DeviceAddress"].ToString();
+                    ins.PublicRegistrar = drI["PublicRegistrarNumber"].ToString();
                 }
             }
 
@@ -635,6 +636,55 @@ namespace Wetu_GUI.Models
             {
                 ins.FatherParents = new FamilyTree();
                 ins.MotherParents = new FamilyTree();
+            }
+
+            return ins;
+        }
+
+        public PublicRegistrar InsertPublicRegistrar(PublicRegistrar ins)
+        {
+            PublicRegistrar ReturnObject = new PublicRegistrar();
+            int ModifiedBy = (int)HttpContext.Current.Session["UserNo"];
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertPublicRegistrar;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@AnimalId", ins.AnimalId);
+                cmdI.Parameters.AddWithValue("@RegistrationNumber", ins.RegistrationNumber);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
+                cmdI.Parameters.AddWithValue("@ModifiedBy", ModifiedBy);
+                cmdI.Parameters.AddWithValue("@Removed", false);
+                ins.PublicId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
             }
 
             return ins;

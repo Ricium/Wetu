@@ -82,6 +82,9 @@ namespace Wetu_GUI.Models
 
         [DisplayName("Changes in Length of Interactions")]
         public bool ChangeLengthInteractions { get; set; }
+
+        [DisplayName("Public Registrar Number")]
+        public string PublicRegistrar { get; set; }
     }
 
 }

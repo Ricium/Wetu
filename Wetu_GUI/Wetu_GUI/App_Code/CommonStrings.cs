@@ -78,10 +78,23 @@ namespace Wetu_GUI
 
         #region Artificial Insemination
         public static string GetInseminationTubes = "usp_t_SpermbankSelectAll";
+        public static string GetInseminationTubesDropDown = "usp_t_SpermbankSelectDropDown";
         public static string GetBirthHistories = "usp_t_BirthHistorySelectAll";
         public static string GetBirthHistoryForAnimal = "usp_t_BirthHistorySelectPerAnimal";
         public static string GetTubeHistories = "usp_t_TubeHistorySelectAll";
         public static string GetTubeHistoryForAnimal = "usp_t_TubeHistorySelectPerAnimal";
+
+        public static string GetInseminationTube = "usp_t_SpermbankSelect";
+        public static string InsertInseminationTube = "usp_t_SpermbankInsert";
+        public static string UpdateInseminationTube = "usp_t_SpermbankUpdate";
+
+        public static string GetBirthHistory = "usp_t_BirthHistorySelect";
+        public static string InsertBirthHistory = "usp_t_BirthHistoryInsert";
+        public static string UpdateBirthHistory = "usp_t_BirthHistoryUpdate";
+        #endregion
+
+        #region Public Registrar
+        public static string InsertPublicRegistrar = "usp_t_PublicRegistrarInsert";
         #endregion
 
         #region Web Return Codes

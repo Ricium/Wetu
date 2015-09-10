@@ -320,8 +320,10 @@
     <Compile Include="Models\DataModels\InseminationTube.cs" />
     <Compile Include="Models\DataModels\MovementLog.cs" />
     <Compile Include="Models\DataModels\ProximityLog.cs" />
+    <Compile Include="Models\DataModels\PublicRegistrar.cs" />
     <Compile Include="Models\DataModels\User.cs" />
     <Compile Include="Models\Repositories\AccountRepository.cs" />
+    <Compile Include="Models\Repositories\AIRepository.cs" />
     <Compile Include="Models\Repositories\AnimalRepository.cs" />
     <Compile Include="Models\Repositories\BirthTypeRepository.cs" />
     <Compile Include="Models\Repositories\AnimalTypeRepository.cs" />
@@ -638,6 +640,9 @@
     <Content Include="Views\Device\Index.aspx" />
     <Content Include="Views\Herd\Index.aspx" />
     <Content Include="Views\Herd\Tag.aspx" />
+    <Content Include="Views\Herd\_AddPublic.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="Views\Herd\_MotherAdd.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
@@ -656,9 +661,11 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="Views\Shared\EditorTemplates\Animal.aspx" />
+    <Content Include="Views\Shared\EditorTemplates\BirthHistory.aspx" />
     <Content Include="Views\Shared\EditorTemplates\BirthType.aspx" />
     <Content Include="Views\Shared\EditorTemplates\AnimalType.aspx" />
     <Content Include="Views\Shared\EditorTemplates\Device.aspx" />
+    <Content Include="Views\Shared\EditorTemplates\InseminationTube.aspx" />
     <Content Include="Views\Shared\MainMenu.ascx" />
     <Content Include="Views\User\Index.aspx" />
     <Content Include="Web.config">

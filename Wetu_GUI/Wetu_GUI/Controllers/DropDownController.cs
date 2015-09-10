@@ -37,5 +37,52 @@ namespace Wetu_GUI.Controllers
             return Json(commonRep.GetBirthTypesDropDown(), JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult _GetAnimalList()
+        {
+            return Json(commonRep.GetAnimalsDropDown(), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult _GetFemaleAnimalsList()
+        {
+            return Json(commonRep.GetFemaleAnimalsDropDown(), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult _GetMaleAnimalsList()
+        {
+            return Json(commonRep.GetMaleAnimalsDropDown(), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult _GetMaleAnimalsListFromTube(int TubeId)
+        {
+            if(TubeId == 0)
+            {
+                return Json(commonRep.GetMaleAnimalsDropDown(), JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                AIRepository aiRep = new AIRepository();
+                // List containing only 1 animal from tubeid
+                return Json(aiRep.GetAnimlDropDownFromTube((int)TubeId), JsonRequestBehavior.AllowGet);  
+            }
+            
+        }
+
+        public JsonResult _GetInseminationTubes(int BirthTypeId)
+        {
+            if(BirthTypeId == 1)
+            {
+                return Json(commonRep.GetInseminationTubesDropDownSingle(), JsonRequestBehavior.AllowGet);
+            }
+            else
+                if(BirthTypeId == 2)
+                {
+                    return Json(commonRep.GetInseminationTubesDropDown(), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(commonRep.GetInseminationTubesDropDownWithNone(), JsonRequestBehavior.AllowGet);
+                }            
+        }
+
     }
 }
