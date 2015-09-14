@@ -1,0 +1,56 @@
+Microchip Technology Inc, vv1.24 (0)
+
+Tool Name:
+  c:\program files\microchip\xc16\v1.24\bin\bin\..\bin/elf-ld.exe
+
+Command:
+  -p24F08KA101 \
+  -o \
+  dist/default/production/SD_Card.X.production.elf \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/.. \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../lib \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../lib/PIC24E \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../support/PIC24E/gld \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../lib/PIC24F \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../support/PIC24F/gld \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../lib/PIC24H \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../support/PIC24H/gld \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../lib/dsPIC30F \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../support/dsPIC30F/gld \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../lib/dsPIC33E \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../support/dsPIC33E/gld \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../lib/dsPIC33F \
+  -Lc:/program files/microchip/xc16/v1.24/bin/bin/../../support/dsPIC33F/gld \
+  build/default/production/main.o \
+  build/default/production/diskio.o \
+  build/default/production/ff.o \
+  --defsym=__MPLAB_BUILD=1 \
+  -Tp24F08KA101.gld.00 \
+  --heap=500 \
+  --stack=16 \
+  --check-sections \
+  --data-init \
+  --pack-data \
+  --handles \
+  --isr \
+  --no-gc-sections \
+  --fill-upper=0 \
+  --stackguard=16 \
+  --no-force-link \
+  --smart-io \
+  -Map=dist/default/production/SD_Card.X.production.map \
+  --report-mem \
+  -start-group \
+  --library=pic30-elf \
+  --library=m-elf \
+  --library=c-elf \
+  -end-group \
+
+Archive member included because of file (symbol)
+
+c:/program files/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
+                              (__resetPRI)
+c:/program files/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(data_init_standard.o)
+                              c:/program files/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o) (__data_init_standard)
+c:/program files/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
+                              build/default/production/ff.o (___udivsi3)
