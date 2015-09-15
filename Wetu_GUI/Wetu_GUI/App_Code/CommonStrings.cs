@@ -95,6 +95,7 @@ namespace Wetu_GUI
 
         #region Public Registrar
         public static string InsertPublicRegistrar = "usp_t_PublicRegistrarInsert";
+        public static string GetPublicRegistrar = "usp_t_PublicRegistrarSelectAll";
         #endregion
 
         #region Web Return Codes
@@ -114,6 +115,7 @@ namespace Wetu_GUI
         #region Alternative Selects
         public static string GetAllUsers = "usp_t_UsersSelectAll";
         public static string GetUsername = "usp_t_UsersSelect";
+        public static string GetCompanyName = "usp_t_CompaniesSelect";
         #endregion
 
         #region Animal View
@@ -121,6 +123,12 @@ namespace Wetu_GUI
         public static string GetAnimalSocialGroupLifetime = "view_t_AnimalsSelectSocialGroup";
         public static string GetAnimalSocialGroupRecent = "view_t_AnimalsSelectSocialGroupTime";
         public static string GetAnimalInteractions = "view_t_AnimalSelectInteractions";
+        #endregion
+
+        #region Simulation
+        public static string GetUsersInCompany = "usp_t_UsersSelectCompany";
+        public static string SimAnimals = "simulation_GetAnimals";
+        public static string SimTubes = "usp_t_SpermbankSelectCompany";
         #endregion
     }
 }

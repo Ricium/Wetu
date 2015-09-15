@@ -30,6 +30,16 @@ namespace Wetu_GUI.Models
                 return null;
             }
         }
+
+        public DataTable GetCompaniesDBVariable(int CompanyId)
+        {
+            var table = new DataTable();
+            table.Columns.Add("Item", typeof(int));
+
+            table.Rows.Add(CompanyId);
+
+            return table;
+        }
         #endregion
 
         #region Grid Selects

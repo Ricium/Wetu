@@ -54,6 +54,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulation.cs" />
+    <Compile Include="Species.cs" />
+    <Compile Include="Tube.cs" />
     <Compile Include="URLs.cs" />
   </ItemGroup>
   <ItemGroup>

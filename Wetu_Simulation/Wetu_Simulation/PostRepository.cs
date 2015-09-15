@@ -39,6 +39,21 @@ namespace Wetu_Simulation
             return returns;
         }
 
+        public List<T> GetDataList<T>(string URL) where T : new()
+        {
+            List<T> returns = new List<T>();
+
+            using (var client = new WebClient())
+            {
+                var response = client.DownloadData(URL);
+                var responseString = Encoding.Default.GetString(response);
+
+                returns = Deserial_Json<List<T>>(responseString);
+            }
+
+            return returns;
+        }
+
         public List<T> GetDataList<T>(string URL, NameValueCollection data) where T : new()
         {
             List<T> returns = new List<T>();

@@ -331,6 +331,7 @@
     <Compile Include="Models\Repositories\DeviceRepository.cs" />
     <Compile Include="Models\Repositories\LoggingRepository.cs" />
     <Compile Include="Models\Repositories\SecurityRepository.cs" />
+    <Compile Include="Models\Repositories\SimulateRepository.cs" />
     <Compile Include="Models\ViewModels\AnimalRelationship.cs" />
     <Compile Include="Models\ViewModels\AnimalView.cs" />
     <Compile Include="Models\ViewModels\DeviceView.cs" />

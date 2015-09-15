@@ -343,8 +343,8 @@ namespace Wetu_GUI.Models
                 cmdI.Parameters.Clear();
                 cmdI.CommandText = CommonStrings.InsertAnimal;
                 cmdI.CommandType = System.Data.CommandType.StoredProcedure;
-                cmdI.Parameters.AddWithValue("@AnimalTypeId", 1);
-                cmdI.Parameters.AddWithValue("@SexId", 1);
+                cmdI.Parameters.AddWithValue("@AnimalTypeId", ins.AnimalTypeId);
+                cmdI.Parameters.AddWithValue("@SexId", ins.SexId);
                 cmdI.Parameters.AddWithValue("@DecriptiveName", ins.DecriptiveName);
                 cmdI.Parameters.AddWithValue("@TagNumber", ins.TagNumber);
                 cmdI.Parameters.AddWithValue("@BirthDate", DateTime.Today);

@@ -16,7 +16,9 @@ namespace Wetu_GUI.Controllers
         private CommonRepository comRep = new CommonRepository();
         private DeviceRepository devRep = new DeviceRepository();
         private AnimalRepository aniRep = new AnimalRepository();
+        private SimulateRepository simRep = new SimulateRepository();
 
+        #region Old Sim
         [HttpPost]
         public ActionResult AddCompany(string CompanyName)
         {
@@ -73,7 +75,7 @@ namespace Wetu_GUI.Controllers
             {
                 return Content("Fail User", "text/html");
             }
-        }
+        }      
 
         [HttpPost]
         public JsonResult GetKeys()
@@ -131,5 +133,140 @@ namespace Wetu_GUI.Controllers
                 return Content("Fail Animal", "text/html");
             }            
         }
+        #endregion
+
+        #region System Simulation
+        [HttpPost]
+        public JsonResult GetCompanies(string Auth)
+        {
+            List<int> companies = accRep.GetCompanyIds();
+            return Json(companies, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetUsersForCompany(int CompanyId)
+        {
+            List<int> users = accRep.GetUsers(CompanyId);
+            return Json(users, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetMaleAnimals(int CompanyId)
+        {
+            List<AnimalSim> animals = simRep.GetAnimals(CompanyId, 1);
+            return Json(animals, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetFemaleAnimals(int CompanyId)
+        {
+            List<AnimalSim> animals = simRep.GetAnimals(CompanyId, 2);
+            return Json(animals, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetInseminationTubes(int CompanyId)
+        {
+            List<TubeSim> tubes = simRep.GetTubes(CompanyId);
+            return Json(tubes, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetPublicRegistrar(string Auth)
+        {
+            List<int> publicreg = simRep.GetPublicRegistrar();
+            return Json(publicreg, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetSpecies(string Auth)
+        {
+            List<SpeciesSim> species = simRep.GetSpeciesList();
+            return Json(species, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult AddCompanySim(string CompanyName)
+        {
+            // Attempt to register the comapny
+            string rolename = "u_" + CompanyName;
+            Roles.CreateRole(rolename);
+
+            // Add Company to Database
+            Company comp = new Company();
+            comp.Name = CompanyName;
+            comp.RoleId = secRep.GetRoleId(rolename);
+            comp.Removed = false;
+            comp = secRep.AddCompany(comp);
+
+            return Json(comp.CompanyId, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult AddUserToCompany(string Username, string Password, int CompanyId)
+        {
+            // Attempt to register the user
+            MembershipCreateStatus createStatus;
+            Membership.CreateUser(Username, Password, "rm.awsum.extra@gmail.com", null, null, true, null, out createStatus);
+
+            string CompanyName = secRep.GetCompanyName(CompanyId);
+
+            if (createStatus == MembershipCreateStatus.Success)
+            {
+                string[] companies = { CompanyName };
+                string[] permissions = { "p_admin" };
+                Roles.AddUserToRoles(Username, companies);
+                Roles.AddUserToRoles(Username, permissions);
+
+                User newUser = new User();
+                newUser.Username = Username;
+                newUser.UserId = secRep.GetUserId(Username);
+                newUser = secRep.AddUser(newUser);
+
+                return Json(newUser.UserKey, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(0, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult AddAnimal(string Name, string Tag, int DeviceId, int SexId, int Species, int CompanyId, int UserKey)
+        {
+            Animal ani = new Animal();
+            ani.DecriptiveName = Name;
+            ani.TagNumber = Tag;
+            ani.ModifiedBy = UserKey;
+            ani.CompanyId = CompanyId;
+            ani.DeviceId = DeviceId;
+            ani.SexId = SexId;
+            ani.AnimalTypeId = Species;
+
+            ani = aniRep.InsertAnimalSim(ani);
+
+            if (ani.DeviceId != 0 && ani.AnimalId != 0)
+            {
+                comRep.LinkAnimalToDeviceSim(ani);
+                return Json(ani.AnimalId, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(0, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult AddDevice(string Address, int CompanyId, int UserKey)
+        {
+            Device dev = new Device();
+            dev.Address = Address;
+            dev.CompanyId = CompanyId;
+            dev.ModifiedBy = UserKey;
+            dev = devRep.InsertDeviceSim(dev);
+
+            return Json(dev.DeviceId, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
     }
 }

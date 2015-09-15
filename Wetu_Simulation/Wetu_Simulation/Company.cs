@@ -10,37 +10,32 @@ namespace Wetu_Simulation
     class Company
     {
         private PostRepository post = new PostRepository();
+        private string PostUrl { get; set; }
 
         public Company() { }
-        public Company(int _CompanyId)
+        public Company(int _CompanyId, string _PostUrl)
         {
             this.CompanyId = _CompanyId;
+            this.PostUrl = _PostUrl;
+
+            this.SetUsers();
+            this.SetAnimals();
+            this.SetInseminationTubes();
         }
 
         #region Company Identification
-        public int CompanyId { get; set; }          //...Identifier for Company
-        public string CompanyName { get; set; }
-
-        
+        public int CompanyId { get; set; }          //...Identifier for Company        
         #endregion
 
         #region Users
         public List<int> Users { get; set; }                           //...Users linked to Company
 
-        public void SetUsers()
-        {
-
-        }
-
-        public void AddUser(string Username, string Password)                       //...Create new user for Company
+        private void SetUsers()
         {
             var values = new NameValueCollection();
-            values["Username"] = Username;
-            values["Password"] = Password;
-            values["CompanyName"] = this.CompanyName;
+            values["CompanyId"] = this.CompanyId.ToString();
 
-            int UserId = post.PostData("Simulate", values);
-
+            this.Users = post.GetDataList<int>(this.PostUrl + URLs.GetUsers, values);
         }
         #endregion
 
@@ -49,10 +44,41 @@ namespace Wetu_Simulation
         public List<Animal> MaleAnimals { get; set; }                  //...Male animals of Company
         public List<Animal> FemaleAnimals { get; set; }                //...Female animals of Company
         public List<Animal> ParentlessAnimals { get; set; }            //...Animals not linked with a parent
+
+        private void SetAnimals()
+        {
+            this.SetMaleAnimals();
+            this.SetFemaleAnimals();
+            this.Animals = this.MaleAnimals.Concat(this.FemaleAnimals).ToList();
+        }
+
+        private void SetMaleAnimals()
+        {
+            var values = new NameValueCollection();
+            values["CompanyId"] = this.CompanyId.ToString();
+
+            this.MaleAnimals = post.GetDataList<Animal>(this.PostUrl + URLs.GetMaleAnimals, values);
+        }
+
+        private void SetFemaleAnimals()
+        {
+            var values = new NameValueCollection();
+            values["CompanyId"] = this.CompanyId.ToString();
+
+            this.FemaleAnimals = post.GetDataList<Animal>(this.PostUrl + URLs.GetFemaleAnimals, values);
+        }
         #endregion
 
         #region Birthing
-        public List<int> InseminationTubes { get; set; }                //...Inseminations Tubes of Company
+        public List<Tube> InseminationTubes { get; set; }                //...Inseminations Tubes of Company
+
+        private void SetInseminationTubes()
+        {
+            var values = new NameValueCollection();
+            values["CompanyId"] = this.CompanyId.ToString();
+
+            this.InseminationTubes = post.GetDataList<Tube>(this.PostUrl + URLs.GetFemaleAnimals, values);
+        }
         #endregion
     }
 

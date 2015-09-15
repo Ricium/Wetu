@@ -10,24 +10,18 @@ namespace Wetu_Simulation
     {
         static void Main(string[] args)
         {
-            Console.Write("Please enter Wetu Server URL (ex. www.wetu.co.za or localhost:51664): ");
-            string URL = Console.ReadLine();
+            //Console.Write("Please enter Wetu Server URL (ex. www.wetu.co.za or localhost:51664): ");
+            //string URL = Console.ReadLine();
+            string URL = "localhost:51664";
 
+            Console.WriteLine("Starting Simulation on Server: " + URL);
+            Console.WriteLine("Starting Simulation: " + DateTime.Now);
             Simulation simulate = new Simulation(URL);
+            Console.WriteLine("Retrieved Data: " + DateTime.Now);
 
-            int [] PublicRegistrar = {};
-            List<Company> WetuSystem = new List<Company>();
+            simulate.AddAnimal();
 
-            //...Get Current Companies
-            int[] Companies = simulate.GetCompanies();
-
-            //...Set Each Companies Data
-            Company ins;
-            for(int i=0; i<Companies.Length; i++)
-            {
-                ins = new Company(i);
-                WetuSystem.Add(ins);
-            }
+            Console.ReadLine();
         }
     }
 }

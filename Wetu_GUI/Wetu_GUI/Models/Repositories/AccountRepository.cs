@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Web;
+using System.Data.SqlClient;
 
 namespace Wetu_GUI.Models
 {
@@ -58,6 +59,25 @@ namespace Wetu_GUI.Models
             return Role_Split;
         }
 
+        public List<string> GetAllSplitRolesValues(string split_char)
+        {
+            List<string> Role_Split = new List<string>();
+
+            string[] roles = Roles.GetAllRoles();
+
+            foreach (string role in roles)
+            {
+                if (role.StartsWith(split_char))
+                {
+                    Role_Split.Add(role.Substring(2));
+                }
+            }
+
+            Role_Split.Sort();
+
+            return Role_Split;
+        }
+
         public List<string> GetUserRoles(string Username, string split_char)
         {
             List<string> Role_Split = new List<string>();
@@ -73,6 +93,19 @@ namespace Wetu_GUI.Models
             }
 
             return Role_Split;
+        }
+
+        public List<int> GetCompanyIds()
+        {
+            SecurityRepository secRep = new SecurityRepository();
+            List<int> ReturnList = new List<int>();
+            List<string> companies = GetAllSplitRolesValues("u_");
+            foreach(string company in companies)
+            {
+                ReturnList.Add(secRep.GetCompanyId(company));
+            }
+
+            return ReturnList;
         }
 
         public List<int> GetCompanyIds(List<string> companies)
@@ -94,5 +127,31 @@ namespace Wetu_GUI.Models
             return secRep.GetUserNo(Username);
         }
 
+        public List<int> GetUsers(int CompanyId)
+        {
+            List<int> ReturnObject = new List<int>();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetUsersInCompany + " @CompanyId", con))
+                {
+                    cmd.Parameters.AddWithValue("@CompanyId", CompanyId);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            ReturnObject.Add(Convert.ToInt32(drI["UserKey"]));
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
     }
 }

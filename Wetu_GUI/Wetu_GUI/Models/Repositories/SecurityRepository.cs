@@ -252,5 +252,36 @@ namespace Wetu_GUI.Models
 
             return ReturnObject;
         }
+
+        public string GetCompanyName(int CompanyId)
+        {
+            string ReturnObject = "";
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetCompanyName;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Parameters.AddWithValue("@CompanyId", CompanyId);
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    ReturnObject = "u_" + drI["Name"].ToString();
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
+
+            return ReturnObject;
+        }
     }
 }
