@@ -88,6 +88,8 @@ namespace Wetu_GUI
         public static string InsertInseminationTube = "usp_t_SpermbankInsert";
         public static string UpdateInseminationTube = "usp_t_SpermbankUpdate";
 
+        public static string InsertInseminationHistory = "usp_t_TubeHistoryInsert";        
+
         public static string GetBirthHistory = "usp_t_BirthHistorySelect";
         public static string InsertBirthHistory = "usp_t_BirthHistoryInsert";
         public static string UpdateBirthHistory = "usp_t_BirthHistoryUpdate";

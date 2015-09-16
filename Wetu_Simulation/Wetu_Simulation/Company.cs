@@ -21,6 +21,23 @@ namespace Wetu_Simulation
             this.SetUsers();
             this.SetAnimals();
             this.SetInseminationTubes();
+
+            if(this.Users == null)
+            {
+                this.Users = new List<int>();
+            }
+
+            
+
+            if(this.Animals == null)
+            {
+                this.Animals = new List<Animal>();
+            }
+
+            if(this.InseminationTubes == null)
+            {
+                this.InseminationTubes = new List<Tube>();
+            }
         }
 
         #region Company Identification
@@ -49,6 +66,17 @@ namespace Wetu_Simulation
         {
             this.SetMaleAnimals();
             this.SetFemaleAnimals();
+
+            if (this.MaleAnimals == null)
+            {
+                this.MaleAnimals = new List<Animal>();
+            }
+
+            if (this.FemaleAnimals == null)
+            {
+                this.FemaleAnimals = new List<Animal>();
+            }
+
             this.Animals = this.MaleAnimals.Concat(this.FemaleAnimals).ToList();
         }
 
@@ -77,7 +105,7 @@ namespace Wetu_Simulation
             var values = new NameValueCollection();
             values["CompanyId"] = this.CompanyId.ToString();
 
-            this.InseminationTubes = post.GetDataList<Tube>(this.PostUrl + URLs.GetFemaleAnimals, values);
+            this.InseminationTubes = post.GetDataList<Tube>(this.PostUrl + URLs.GetTubes, values);
         }
         #endregion
     }

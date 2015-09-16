@@ -14,24 +14,8 @@ namespace Proximity_Logging_Simulator
     {
         static void Main(string[] args)
         {
-            List<Company> companies = new List<Company>();
-            DatabaseConnection dbConn = new DatabaseConnection();
-
-            using (var con = dbConn.SqlConn())
-            {
-                con.Open();
-
-                using (SqlCommand cmd = new SqlCommand("exec usp_t_GetAllCompanies", con))
-                {
-                    using (var drI = cmd.ExecuteReader())
-                    {
-                        while (drI.Read())
-                        {
-                            companies.Add(new Company(Convert.ToInt32(drI["CompanyId"])));
-                        }
-                    }
-                }
-            }
+            
+            DatabaseConnection dbConn = new DatabaseConnection();            
 
             Console.WriteLine("Starting");
             Random rnd = new Random();
@@ -49,47 +33,68 @@ namespace Proximity_Logging_Simulator
             {
                 if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape) break;
 
-                RandComp = rnd.Next(0, companies.Count); ;
-
-                DevA = companies[RandComp].GetRandom(-1);
-                DeviceA = companies[RandComp].Devices[DevA];
-                DevB = companies[RandComp].GetRandom(DevA);
-                DeviceB = companies[RandComp].Devices[DevB];
-                DateTime start = companies[RandComp].RandomDateTime();
-                DateTime end = companies[RandComp].RandomDateTime(start); 
-
-                Console.WriteLine(DeviceA + " in prox. of " + DeviceB);            
-                
-                using (var client = new WebClient())
+                List<Company> companies = new List<Company>();
+                using (var con = dbConn.SqlConn())
                 {
-                    var values = new NameValueCollection();
-                    values["DeviceReceivedAddress"] = DeviceA;
-                    values["DeviceConnectedAddress"] = DeviceB;
-                    values["ConncetionStart"] = start.ToString();
-                    values["ConnectionEnd"] = end.ToString();
+                    con.Open();
 
-                    var response = client.UploadValues("http://localhost:51664/Log/LogProximity", values);
-
-                    var responseString = Encoding.Default.GetString(response);
-
-                    Console.WriteLine("Logged");
+                    using (SqlCommand cmd = new SqlCommand("exec usp_t_GetAllCompanies", con))
+                    {
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                companies.Add(new Company(Convert.ToInt32(drI["CompanyId"])));
+                            }
+                        }
+                    }
                 }
 
-                Console.WriteLine(DeviceB + " in prox. of " + DeviceA);
+                RandComp = rnd.Next(0, companies.Count); ;
 
-                using (var client = new WebClient())
+                if (companies[RandComp].Devices.Count >= 2)
                 {
-                    var values = new NameValueCollection();
-                    values["DeviceReceivedAddress"] = DeviceB;
-                    values["DeviceConnectedAddress"] = DeviceA;
-                    values["ConncetionStart"] = start.ToString();
-                    values["ConnectionEnd"] = end.ToString();
 
-                    var response = client.UploadValues("http://localhost:51664/Log/LogProximity", values);
+                    DevA = companies[RandComp].GetRandom(-1);
+                    DeviceA = companies[RandComp].Devices[DevA];
+                    DevB = companies[RandComp].GetRandom(DevA);
+                    DeviceB = companies[RandComp].Devices[DevB];
+                    DateTime start = companies[RandComp].RandomDateTime();
+                    DateTime end = companies[RandComp].RandomDateTime(start);
 
-                    var responseString = Encoding.Default.GetString(response);
+                    Console.WriteLine(DeviceA + " in prox. of " + DeviceB);
 
-                    Console.WriteLine("Logged");
+                    using (var client = new WebClient())
+                    {
+                        var values = new NameValueCollection();
+                        values["DeviceReceivedAddress"] = DeviceA;
+                        values["DeviceConnectedAddress"] = DeviceB;
+                        values["ConncetionStart"] = start.ToString();
+                        values["ConnectionEnd"] = end.ToString();
+
+                        var response = client.UploadValues("http://localhost:51664/Log/LogProximity", values);
+
+                        var responseString = Encoding.Default.GetString(response);
+
+                        Console.WriteLine("Logged");
+                    }
+
+                    Console.WriteLine(DeviceB + " in prox. of " + DeviceA);
+
+                    using (var client = new WebClient())
+                    {
+                        var values = new NameValueCollection();
+                        values["DeviceReceivedAddress"] = DeviceB;
+                        values["DeviceConnectedAddress"] = DeviceA;
+                        values["ConncetionStart"] = start.ToString();
+                        values["ConnectionEnd"] = end.ToString();
+
+                        var response = client.UploadValues("http://localhost:51664/Log/LogProximity", values);
+
+                        var responseString = Encoding.Default.GetString(response);
+
+                        Console.WriteLine("Logged");
+                    }
                 }
 
                 Console.WriteLine("Sleeping");

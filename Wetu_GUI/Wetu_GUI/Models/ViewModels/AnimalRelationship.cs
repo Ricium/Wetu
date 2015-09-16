@@ -20,5 +20,7 @@ namespace Wetu_GUI.Models
         public int RelationshipId { get; set; }
         public int ChildAnimalId { get; set; }
         public int ParentAnimalId { get; set; }
+        public DateTime ModiefiedDate { get; set; }
+        public int ModifiedBy { get; set; }
     }
 }

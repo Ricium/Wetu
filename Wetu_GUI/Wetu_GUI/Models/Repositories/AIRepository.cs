@@ -97,6 +97,55 @@ namespace Wetu_GUI.Models
             return ins;
         }
 
+        public InseminationTube InsertTubeSim(InseminationTube ins)
+        {
+            InseminationTube ReturnObject = new InseminationTube();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertInseminationTube;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@AnimalId", ins.AnimalFromId);
+                cmdI.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", ins.ModifiedDate);
+                cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
+                cmdI.Parameters.AddWithValue("@CompanyId", ins.CompanyId);
+                cmdI.Parameters.AddWithValue("@Removed", false);
+                ins.TubeId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
+            }
+
+            return ins;
+        }
+
         public InseminationTube UpdateTube(InseminationTube ins)
         {
             int ModifiedBy = (int)HttpContext.Current.Session["UserNo"];
@@ -266,6 +315,76 @@ namespace Wetu_GUI.Models
             return ins;
         }
 
+        public BirthHistory InsertBirthHistorySim(BirthHistory ins)
+        {
+            BirthHistory ReturnObject = new BirthHistory();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertBirthHistory;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@BirthTypeId", ins.BirthTypeId);
+                cmdI.Parameters.AddWithValue("@FemaleParentId", ins.FemaleParentId);
+                cmdI.Parameters.AddWithValue("@MaleParentId", ins.MaleParentId);
+
+                if (ins.ChildId == 0)
+                {
+                    cmdI.Parameters.AddWithValue("@ChildId", DBNull.Value);
+                }
+                else
+                {
+                    cmdI.Parameters.AddWithValue("@ChildId", ins.ChildId);
+                }
+
+                if (ins.TubeId == 0)
+                {
+                    cmdI.Parameters.AddWithValue("@TubeId", DBNull.Value);
+                }
+                else
+                {
+                    cmdI.Parameters.AddWithValue("@TubeId", ins.TubeId);
+                }
+
+                cmdI.Parameters.AddWithValue("@Success", ins.Success);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", ins.ModifiedDate);
+                cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
+                cmdI.Parameters.AddWithValue("@CompanyId", ins.CompanyId);
+                cmdI.Parameters.AddWithValue("@Removed", false);
+                ins.HistoryId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
+            }
+
+            return ins;
+        }
+
         public BirthHistory UpdateBirthHistory(BirthHistory ins)
         {
             int ModifiedBy = (int)HttpContext.Current.Session["UserNo"];
@@ -369,6 +488,103 @@ namespace Wetu_GUI.Models
             ReturnObject.Add(ins);
 
             return ReturnObject;
+        }
+
+        public InseminationHistory InsertInseminationHistory(InseminationHistory ins)
+        {
+            InseminationHistory ReturnObject = new InseminationHistory();
+            int ModifiedBy = (int)HttpContext.Current.Session["UserNo"];
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertInseminationHistory;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@AnimalId", ins.AnimalId);
+                cmdI.Parameters.AddWithValue("@TubeId", ins.TubeId);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
+                cmdI.Parameters.AddWithValue("@ModifiedBy", ModifiedBy);
+                cmdI.Parameters.AddWithValue("@CompanyId", ins.CompanyId);
+                ins.HistoryId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
+            }
+
+            return ins;
+        }
+
+        public InseminationHistory InsertInseminationHistorySim(InseminationHistory ins)
+        {
+            InseminationHistory ReturnObject = new InseminationHistory();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertInseminationHistory;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@AnimalId", ins.AnimalId);
+                cmdI.Parameters.AddWithValue("@TubeId", ins.TubeId);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", ins.ModifiedDate);
+                cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
+                cmdI.Parameters.AddWithValue("@CompanyId", ins.CompanyId);
+                ins.HistoryId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
+            }
+
+            return ins;
         }
     }
 }

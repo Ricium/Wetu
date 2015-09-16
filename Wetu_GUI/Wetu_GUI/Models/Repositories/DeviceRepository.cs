@@ -118,7 +118,7 @@ namespace Wetu_GUI.Models
                 cmdI.CommandType = System.Data.CommandType.StoredProcedure;
                 cmdI.Parameters.AddWithValue("@Address", ins.Address);
                 cmdI.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
-                cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", ins.ModifiedDate);
                 cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
                 cmdI.Parameters.AddWithValue("@CompanyId", ins.CompanyId);
                 cmdI.Parameters.AddWithValue("@Removed", false);

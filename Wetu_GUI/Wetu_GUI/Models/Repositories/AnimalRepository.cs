@@ -349,7 +349,7 @@ namespace Wetu_GUI.Models
                 cmdI.Parameters.AddWithValue("@TagNumber", ins.TagNumber);
                 cmdI.Parameters.AddWithValue("@BirthDate", DateTime.Today);
                 cmdI.Parameters.AddWithValue("@CreatedDate", DateTime.Now);
-                cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", ins.ModifiedDate);
                 cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
                 cmdI.Parameters.AddWithValue("@CompanyId", ins.CompanyId);
                 cmdI.Parameters.AddWithValue("@Removed", false);
@@ -479,6 +479,55 @@ namespace Wetu_GUI.Models
                 cmdI.Parameters.AddWithValue("@ChildId", ins.ChildAnimalId);
                 cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
                 cmdI.Parameters.AddWithValue("@ModifiedBy", ModifiedBy);
+                cmdI.Parameters.AddWithValue("@Removed", false);
+
+                ins.RelationshipId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
+            }
+
+            return ins;
+        }
+
+        public AnimalRelationship InsertAnimalRelationshipSim(AnimalRelationship ins)
+        {
+            AnimalRelationship ReturnObject = new AnimalRelationship();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertAnimalRelationship;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@ParentId", ins.ParentAnimalId);
+                cmdI.Parameters.AddWithValue("@ChildId", ins.ChildAnimalId);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", ins.ModiefiedDate);
+                cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
                 cmdI.Parameters.AddWithValue("@Removed", false);
 
                 ins.RelationshipId = (int)cmdI.ExecuteScalar();
@@ -665,6 +714,54 @@ namespace Wetu_GUI.Models
                 cmdI.Parameters.AddWithValue("@RegistrationNumber", ins.RegistrationNumber);
                 cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
                 cmdI.Parameters.AddWithValue("@ModifiedBy", ModifiedBy);
+                cmdI.Parameters.AddWithValue("@Removed", false);
+                ins.PublicId = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
+            }
+
+            return ins;
+        }
+
+        public PublicRegistrar InsertPublicRegistrarSim(PublicRegistrar ins)
+        {
+            PublicRegistrar ReturnObject = new PublicRegistrar();
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction(CommonStrings.InsertTransaction);
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = CommonStrings.InsertPublicRegistrar;
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@AnimalId", ins.AnimalId);
+                cmdI.Parameters.AddWithValue("@RegistrationNumber", ins.RegistrationNumber);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", ins.ModifiedDate);
+                cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
                 cmdI.Parameters.AddWithValue("@Removed", false);
                 ins.PublicId = (int)cmdI.ExecuteScalar();
 

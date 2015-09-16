@@ -1069,7 +1069,7 @@ namespace Wetu_GUI.Models
             cmdI.Parameters.AddWithValue("@DeviceId", ins.DeviceId);
             cmdI.Parameters.AddWithValue("@AnimalId", ins.AnimalId);
             cmdI.Parameters.AddWithValue("@IsCurrent", true);
-            cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
+            cmdI.Parameters.AddWithValue("@ModifiedDate", ins.ModifiedDate);
             cmdI.Parameters.AddWithValue("@ModifiedBy", ins.ModifiedBy);
             cmdI.ExecuteNonQuery();
             cmdI.Connection.Close();

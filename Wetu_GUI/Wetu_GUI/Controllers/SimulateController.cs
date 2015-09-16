@@ -17,6 +17,8 @@ namespace Wetu_GUI.Controllers
         private DeviceRepository devRep = new DeviceRepository();
         private AnimalRepository aniRep = new AnimalRepository();
         private SimulateRepository simRep = new SimulateRepository();
+        private AIRepository aiRep = new AIRepository();
+        private LoggingRepository logRep = new LoggingRepository();
 
         #region Old Sim
         [HttpPost]
@@ -232,7 +234,7 @@ namespace Wetu_GUI.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddAnimal(string Name, string Tag, int DeviceId, int SexId, int Species, int CompanyId, int UserKey)
+        public JsonResult AddAnimal(string Name, string Tag, int DeviceId, int SexId, int Species, int CompanyId, int UserKey, DateTime ModifiedDate)
         {
             Animal ani = new Animal();
             ani.DecriptiveName = Name;
@@ -242,6 +244,7 @@ namespace Wetu_GUI.Controllers
             ani.DeviceId = DeviceId;
             ani.SexId = SexId;
             ani.AnimalTypeId = Species;
+            ani.ModifiedDate = ModifiedDate;
 
             ani = aniRep.InsertAnimalSim(ani);
 
@@ -257,15 +260,187 @@ namespace Wetu_GUI.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddDevice(string Address, int CompanyId, int UserKey)
+        public JsonResult AddDevice(string Address, int CompanyId, int UserKey, DateTime ModifiedDate)
         {
             Device dev = new Device();
             dev.Address = Address;
             dev.CompanyId = CompanyId;
             dev.ModifiedBy = UserKey;
+            dev.ModifiedDate = ModifiedDate;
             dev = devRep.InsertDeviceSim(dev);
 
             return Json(dev.DeviceId, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult AddInseminationTube(int AnimalId, int CompanyId, int UserKey, DateTime ModifiedDate)
+        {
+            InseminationTube tube = new InseminationTube();
+            tube.AnimalFromId = AnimalId;
+            tube.CompanyId = CompanyId;
+            tube.ModifiedBy = UserKey;
+            tube.ModifiedDate = ModifiedDate;
+
+            tube = aiRep.InsertTubeSim(tube);
+
+            return Json(tube.TubeId, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpPost]
+        public JsonResult AddToPublicRegistrar(int AnimalId, string RegNo, int UserKey, DateTime ModifiedDate)
+        {
+            PublicRegistrar pub = new PublicRegistrar();
+            pub.AnimalId = AnimalId;
+            pub.RegistrationNumber = RegNo;
+            pub.ModifiedBy = UserKey;
+            pub.ModifiedDate = ModifiedDate;
+
+            pub = aniRep.InsertPublicRegistrarSim(pub);
+
+            return Json(pub.PublicId, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult AddBirthScenario(int FemaleId, int MaleId, int ChildId, int TubeId, int BirthTypeId, int Success, int CompanyId, int UserKey, DateTime ModifiedDate)
+        {
+            //...Check if Tube was used
+            if(TubeId != 0)
+            {
+                //...Tube was used, save history record
+                InseminationHistory insem = new InseminationHistory();
+                insem.AnimalId = FemaleId;
+                insem.TubeId = TubeId;
+                insem.CompanyId = CompanyId;
+                insem.ModifiedBy = UserKey;
+                insem.ModifiedDate = ModifiedDate.AddDays(-274);
+
+                insem = aiRep.InsertInseminationHistorySim(insem);
+
+                if(insem.HistoryId == 0)
+                {
+                    return Json(insem.HistoryId, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            //...Insert Birth History
+            BirthHistory birth = new BirthHistory();
+            birth.BirthTypeId = BirthTypeId;
+            birth.ChildId = ChildId;
+            birth.CompanyId = CompanyId;
+            birth.FemaleParentId = FemaleId;
+            birth.MaleParentId = MaleId;
+            birth.ModifiedBy = UserKey;
+            birth.Success = (Success == 1) ? true : false;
+            birth.TubeId = TubeId;
+            birth.ModifiedDate = ModifiedDate;
+
+            birth = aiRep.InsertBirthHistorySim(birth);
+
+            if ((birth.HistoryId != 0) && (birth.ChildId != 0))
+            {
+                AnimalRelationship father = new AnimalRelationship();
+                father.ParentAnimalId = birth.MaleParentId;
+                father.ChildAnimalId = birth.ChildId;
+                father.ModiefiedDate = ModifiedDate;
+                father.ModifiedBy = UserKey;
+                father = aniRep.InsertAnimalRelationshipSim(father);
+
+                AnimalRelationship mother = new AnimalRelationship();
+                mother.ParentAnimalId = birth.FemaleParentId;
+                mother.ChildAnimalId = birth.ChildId;
+                mother.ModiefiedDate = ModifiedDate;
+                mother.ModifiedBy = UserKey;
+                mother = aniRep.InsertAnimalRelationshipSim(mother);
+            }
+
+            return Json(birth.HistoryId, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult LogProximity(string DeviceReceivedAddress, string DeviceConnectedAddress, DateTime ConncetionStart, DateTime ConnectionEnd)
+        {
+            ProximityLog ins = new ProximityLog();
+            ins.ProximityStarted = ConncetionStart;
+            ins.ProximityEnded = ConnectionEnd;
+
+            //...Check if DeviceReceivedAddress is in Database
+            ins.DeviceConnectedTo = logRep.GetDeviceId(DeviceReceivedAddress);
+            if (ins.DeviceConnectedTo != -1)
+            {
+                //... Check if DeviceConnectedAddress is in Database
+                ins.DeviceInProximity = logRep.GetDeviceId(DeviceConnectedAddress);
+                if (ins.DeviceInProximity != -1)
+                {
+                    //...Check if Device is Connected to Animal
+                    ins.AnimalConnectedTo = logRep.GetAnimalId(ins.DeviceConnectedTo);
+                    if (ins.AnimalConnectedTo != -1)
+                    {
+                        //...Check if Device is Connected to Animal
+                        ins.AnimalInProximity = logRep.GetAnimalId(ins.DeviceInProximity);
+                        if (ins.AnimalInProximity != -1)
+                        {
+                            //...Log Proximity
+                            if (logRep.LogProximity(ins))
+                                return Json(CommonStrings.Success, JsonRequestBehavior.AllowGet);
+                            else
+                                return Json(CommonStrings.Error_DBFail, JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            return Json(CommonStrings.Error_DeviceConnectedNotConnectedToAnimal, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                    else
+                    {
+                        return Json(CommonStrings.Error_DeviceReceivedNotConnectedToAnimal, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(CommonStrings.Error_DeviceConnected, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                return Json(CommonStrings.Error_DeviceReceived, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(CommonStrings.Error, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult LogMovement(string DeviceAddress, int Axis, DateTime ModifiedDate)
+        {
+            MovementLog ins = new MovementLog();
+            ins.AxisId = Axis;
+            ins.LogDate = ModifiedDate;
+
+            //...Check if DeviceAddress is in Database
+            ins.DeviceId = logRep.GetDeviceId(DeviceAddress);
+            if (ins.DeviceId != -1)
+            {
+                //...Check if Device is Connected to Animal
+                ins.AnimalId = logRep.GetAnimalId(ins.DeviceId);
+                if (ins.AnimalId != -1)
+                {
+                    //...Log Proximity
+                    if (logRep.LogMovement(ins))
+                        return Json(CommonStrings.Success, JsonRequestBehavior.AllowGet);
+                    else
+                        return Json(CommonStrings.Error_DBFail, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(CommonStrings.Error_AnimalNotConnectedToDevice, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            else
+            {
+                return Json(CommonStrings.Error_Invaild_DeviceAddress, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(CommonStrings.Error, JsonRequestBehavior.AllowGet);
         }
         #endregion
     }

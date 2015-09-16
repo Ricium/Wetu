@@ -19,6 +19,10 @@ namespace Wetu_Simulation
         public static string AddUser = "/Simulate/AddUserToCompany";
         public static string AddDevice = "/Simulate/AddDevice";
         public static string AddAnimal = "/Simulate/AddAnimal";
-        
+        public static string AddTube = "/Simulate/AddInseminationTube";
+        public static string AddToPublic = "/Simulate/AddToPublicRegistrar";
+        public static string AddBirth = "/Simulate/AddBirthScenario";
+        public static string LogProximity = "/Simulate/LogProximity";
+        public static string LogMovement = "/Simulate/LogMovement";
     }
 }
