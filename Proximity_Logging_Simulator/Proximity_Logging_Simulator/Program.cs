@@ -26,10 +26,7 @@ namespace Proximity_Logging_Simulator
             string DeviceB = "";
             int RandComp = 0;
 
-            int count = 0;
-
-
-            while (count <= 5000000)
+            while (true)
             {
                 if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape) break;
 
@@ -97,8 +94,7 @@ namespace Proximity_Logging_Simulator
                     }
                 }
 
-                Console.WriteLine("Sleeping");
-                count++;
+                Console.WriteLine("Waiting");
                 Thread.Sleep(50);
             }
 

@@ -352,6 +352,30 @@ namespace Wetu_Simulation
 
         }
 
+        public void AddUser(int CompanyIndex)
+        {
+            //this.SelectRandomCompany();
+            string Name = GenerateRandomString(8);
+
+            var values = new NameValueCollection();
+            values["Username"] = Name;
+            values["Password"] = "12345@qwerty";
+            values["CompanyId"] = this.WetuSystem[CompanyIndex].CompanyId.ToString(); //this.SelectedCompany.ToString();
+
+            int result = post.GetDataInstance<int>(this.PostUrl + URLs.AddUser, values);
+
+            if (result != 0)
+            {
+                this.WetuSystem[this.SelectedCompanyIndex].Users.Add(result);
+                Console.WriteLine("Company " + this.SelectedCompanyIndex.ToString() + " Added User: " + Name);
+            }
+            else
+            {
+                Console.WriteLine("Failed to insert User");
+            }
+
+        }
+
         private Animal AddDevice()
         {
             this.SelectRandomCompany();
@@ -372,8 +396,24 @@ namespace Wetu_Simulation
                 ins.DeviceAddress = values["Address"];
                 return ins;
             }
+            else
+            {
+                this.AddUser(this.SelectedCompanyIndex);
+                this.SelectRandomUser();
 
-            return new Animal();
+                var values = new NameValueCollection();
+                values["Address"] = GenerateRandomString(8);
+                values["CompanyId"] = this.WetuSystem[this.SelectedCompanyIndex].CompanyId.ToString();
+                values["UserKey"] = this.SelectedUser.ToString();
+                values["ModifiedDate"] = this.SelectRandomModifiedDate().ToString();
+
+                int result = post.GetDataInstance<int>(this.PostUrl + URLs.AddDevice, values);
+
+                Animal ins = new Animal();
+                ins.AnimalId = result;
+                ins.DeviceAddress = values["Address"];
+                return ins;
+            }
         }
 
         private Animal AddDevice(int CompanyIndex)
@@ -384,7 +424,25 @@ namespace Wetu_Simulation
             {
                 var values = new NameValueCollection();
                 values["Address"] = GenerateRandomString(8);
-                values["CompanyId"] = this.SelectedCompany.ToString();
+                values["CompanyId"] = this.WetuSystem[CompanyIndex].CompanyId.ToString();
+                values["UserKey"] = this.SelectedUser.ToString();
+                values["ModifiedDate"] = this.SelectRandomModifiedDate().ToString();
+
+                int result = post.GetDataInstance<int>(this.PostUrl + URLs.AddDevice, values);
+
+                Animal ins = new Animal();
+                ins.AnimalId = result;
+                ins.DeviceAddress = values["Address"];
+                return ins;
+            }
+            else
+            {
+                this.AddUser(this.SelectedCompanyIndex);
+                this.SelectRandomUser();
+
+                var values = new NameValueCollection();
+                values["Address"] = GenerateRandomString(8);
+                values["CompanyId"] = this.WetuSystem[CompanyIndex].CompanyId.ToString();
                 values["UserKey"] = this.SelectedUser.ToString();
                 values["ModifiedDate"] = this.SelectRandomModifiedDate().ToString();
 
@@ -396,7 +454,6 @@ namespace Wetu_Simulation
                 return ins;
             }
 
-            return new Animal();
         }
 
         private Animal AddChildDevice()
@@ -484,7 +541,7 @@ namespace Wetu_Simulation
                 values["DeviceId"] = ins.AnimalId.ToString();
                 values["SexId"] = SexId.ToString();
                 values["Species"] = this.SelectRandomSpecies().ToString();
-                values["CompanyId"] = this.SelectedCompany.ToString();
+                values["CompanyId"] = this.WetuSystem[CompanyIndex].CompanyId.ToString();
                 values["UserKey"] = this.SelectedUser.ToString();
                 values["ModifiedDate"] = this.SelectRandomModifiedDate().ToString();
 
@@ -801,6 +858,7 @@ namespace Wetu_Simulation
             else
             {
                 this.AddAnimal(this.SelectedCompanyIndex);
+                this.LogProximity();
             }
         }
 

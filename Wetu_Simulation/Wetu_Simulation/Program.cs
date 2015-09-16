@@ -40,33 +40,33 @@ namespace Wetu_Simulation
                         }
                         else
                         {
-                            if ((next_move >= 20) && (next_move < 200))
+                            if ((next_move >= 20) && (next_move < 700))
                             {
-                                simulate.AddAnimal();
+                                simulate.LogProximity();
                             }
                             else
                             {
-                                if ((next_move >= 200) && (next_move < 300))
+                                if ((next_move >= 700) && (next_move < 750))
                                 {
                                     simulate.AddTube();
                                 }
                                 else
                                 {
-                                    if ((next_move >= 300) && (next_move < 350))
+                                    if ((next_move >= 750) && (next_move < 800))
                                     {
                                         simulate.AddToPublicRegistrar();
                                     }
                                     else
                                     {
-                                        if ((next_move >= 350) && (next_move < 425))
+                                        if ((next_move >= 800) && (next_move < 875))
                                         {
                                             simulate.CreateBirth();
                                         }
                                         else
                                         {
-                                            if ((next_move >= 425) && (next_move < 980))
+                                            if ((next_move >= 875) && (next_move < 980))
                                             {
-                                                simulate.LogProximity();
+                                                simulate.AddAnimal();
                                             }
                                             else
                                             {
