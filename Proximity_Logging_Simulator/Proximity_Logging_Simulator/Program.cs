@@ -15,7 +15,24 @@ namespace Proximity_Logging_Simulator
         static void Main(string[] args)
         {
             
-            DatabaseConnection dbConn = new DatabaseConnection();            
+            DatabaseConnection dbConn = new DatabaseConnection();
+
+            List<Company> companies = new List<Company>();
+            using (var con = dbConn.SqlConn())
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec usp_t_GetAllCompanies", con))
+                {
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            companies.Add(new Company(Convert.ToInt32(drI["CompanyId"])));
+                        }
+                    }
+                }
+            }
 
             Console.WriteLine("Starting");
             Random rnd = new Random();
@@ -30,22 +47,7 @@ namespace Proximity_Logging_Simulator
             {
                 if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape) break;
 
-                List<Company> companies = new List<Company>();
-                using (var con = dbConn.SqlConn())
-                {
-                    con.Open();
-
-                    using (SqlCommand cmd = new SqlCommand("exec usp_t_GetAllCompanies", con))
-                    {
-                        using (var drI = cmd.ExecuteReader())
-                        {
-                            while (drI.Read())
-                            {
-                                companies.Add(new Company(Convert.ToInt32(drI["CompanyId"])));
-                            }
-                        }
-                    }
-                }
+                
 
                 RandComp = rnd.Next(0, companies.Count); ;
 
