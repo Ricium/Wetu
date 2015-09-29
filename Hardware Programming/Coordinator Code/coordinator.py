@@ -12,6 +12,7 @@ port = 'COM4'                                               # Serial Port of XBe
 baudrate = 19200                                            # Required Baudrate
 localport = 'http://localhost:51664/'
 url = localport + 'Log/LogProximity'                # URL to POST data to
+url_movement = localport + 'Log/LogMovement'
 
 # Function to start serial connection
 def start_serial(PORT, BAUDRATE):
@@ -121,15 +122,15 @@ while True:
                 process_thread.start()
 
                 if acc.x == 'Y':
-                    movement_thread = threading.Thread(target=postdata_movement, args=(address, 1,))
+                    movement_thread = threading.Thread(target=postdata_movement, args=(url_movement, address, 1,))
                     movement_thread.start()
 
                 if acc.y == 'Y':
-                    movement_thread = threading.Thread(target=postdata_movement, args=(address, 2,))
+                    movement_thread = threading.Thread(target=postdata_movement, args=(url_movement, address, 2,))
                     movement_thread.start()
 
                 if acc.z == 'Y':
-                    movement_thread = threading.Thread(target=postdata_movement, args=(address, 3,))
+                    movement_thread = threading.Thread(target=postdata_movement, args=(url_movement, address, 3,))
                     movement_thread.start()
             except:
                 print "Error: Unable to Start Thread: Process_Thread"

@@ -103,7 +103,7 @@ class DeviceNode:
                         signal = signal[:len(signal)-1]
 
                     try:
-                        if int(signal) >= -40:
+                        if int(signal) >= -50:
                             module = AnimalNode(name, datetime.now(), signal)
                             connections.append(module)
                     except ValueError:
