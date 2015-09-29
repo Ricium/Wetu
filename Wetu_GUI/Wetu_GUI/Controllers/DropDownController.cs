@@ -84,5 +84,10 @@ namespace Wetu_GUI.Controllers
                 }            
         }
 
+        public JsonResult _GetInseminationTubesAll()
+        {
+            return Json(commonRep.GetInseminationTubesDropDown(), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

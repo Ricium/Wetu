@@ -119,6 +119,16 @@ namespace Wetu_GUI.Controllers
             return Json(new GridModel(commonRep.GetBirthHistories(AnimalId)));
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
+        [GridAction]
+        public JsonResult _InsertInsemination(InseminationHistory ins, int AnimalId)
+        {
+            ins.AnimalId = AnimalId;
+            ins = aiRep.InsertInseminationHistory(ins);
+
+            return Json(new GridModel(commonRep.GetInseminationHistories(AnimalId)));
+        }
+
         public ActionResult Index()
         {
             ViewData["Companies"] = commonRep.GetCompaniesDropDown();
@@ -130,6 +140,7 @@ namespace Wetu_GUI.Controllers
         public ActionResult Tag(int id)
         {
             AnimalView ins = animalRep.GetAnimalView(id);
+            ViewData["InseminationTubes"] = commonRep.GetInseminationTubesDropDown();
             return View(ins);
         }
 

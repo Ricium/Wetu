@@ -491,6 +491,11 @@
                            %> 
                                 <% Html.Telerik().Grid<InseminationHistory>()
                                            .Name("InseminationHistoryGrid")
+                                           .DataKeys(key =>
+                                           {
+                                               key.Add(k => k.HistoryId);
+                                           })
+                                           .ToolBar(command => command.Insert().ButtonType(GridButtonType.ImageAndText).Text("Inseminate Animal"))
                                            .Columns(column =>
                                            {
                                                column.Bound(m => m.TubeId);
@@ -501,11 +506,13 @@
                                            .DataBinding(db => 
                                                {
                                                    db.Ajax()
-                                                        .Select("_ListInseminationHistory", "Herd", new { AnimalId = Model.AnimalId });
+                                                        .Select("_ListInseminationHistory", "Herd", new { AnimalId = Model.AnimalId })
+                                                        .Insert("_InsertInsemination", "Herd", new { AnimalId = Model.AnimalId });
                                                })
                                            .Pageable(page => page.PageSize(100))
                                            .Sortable()
                                            .Scrollable(scroll => scroll.Height(250))
+                                           .Editable(edit => edit.Mode(GridEditMode.PopUp))
                                            .Render();
                             %>
                            <%

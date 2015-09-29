@@ -666,6 +666,7 @@
     <Content Include="Views\Shared\EditorTemplates\BirthType.aspx" />
     <Content Include="Views\Shared\EditorTemplates\AnimalType.aspx" />
     <Content Include="Views\Shared\EditorTemplates\Device.aspx" />
+    <Content Include="Views\Shared\EditorTemplates\InseminationHistory.aspx" />
     <Content Include="Views\Shared\EditorTemplates\InseminationTube.aspx" />
     <Content Include="Views\Shared\MainMenu.ascx" />
     <Content Include="Views\User\Index.aspx" />
