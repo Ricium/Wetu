@@ -302,6 +302,7 @@
     <Compile Include="Controllers\HerdController.cs" />
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\MaintenanceController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\SimulateController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -322,6 +323,7 @@
     <Compile Include="Models\DataModels\ProximityLog.cs" />
     <Compile Include="Models\DataModels\PublicRegistrar.cs" />
     <Compile Include="Models\DataModels\User.cs" />
+    <Compile Include="Models\DataModels\UserNotification.cs" />
     <Compile Include="Models\Repositories\AccountRepository.cs" />
     <Compile Include="Models\Repositories\AIRepository.cs" />
     <Compile Include="Models\Repositories\AnimalRepository.cs" />
@@ -330,6 +332,7 @@
     <Compile Include="Models\Repositories\CommonRepository.cs" />
     <Compile Include="Models\Repositories\DeviceRepository.cs" />
     <Compile Include="Models\Repositories\LoggingRepository.cs" />
+    <Compile Include="Models\Repositories\NotificationRepository.cs" />
     <Compile Include="Models\Repositories\SecurityRepository.cs" />
     <Compile Include="Models\Repositories\SimulateRepository.cs" />
     <Compile Include="Models\ViewModels\AnimalRelationship.cs" />
@@ -661,6 +664,8 @@
     <Content Include="Views\Maintenance\_AnimalTypes.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="Views\Notification\Index.aspx" />
+    <Content Include="Views\Shared\EditorTemplates\UserNotification.aspx" />
     <Content Include="Views\Shared\EditorTemplates\Animal.aspx" />
     <Content Include="Views\Shared\EditorTemplates\BirthHistory.aspx" />
     <Content Include="Views\Shared\EditorTemplates\BirthType.aspx" />

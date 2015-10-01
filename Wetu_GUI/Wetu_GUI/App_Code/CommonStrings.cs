@@ -132,5 +132,15 @@ namespace Wetu_GUI
         public static string SimAnimals = "simulation_GetAnimals";
         public static string SimTubes = "usp_t_SpermbankSelectCompany";
         #endregion
+
+        #region Notifiactions
+        public static string GetAllUserNotifications = "usp_t_UserNotificationsSelectAll";
+        public static string GetUserNotification = "usp_t_UserNotificationsSelect";
+        public static string InsertUserNotifications = "usp_t_UserNotificationsInsert";
+        public static string UpdateUserNotifications = "usp_t_UserNotificationsUpdate";
+        public static string DeleteUserNotifications = "usp_t_UserNotificationsDelete";
+
+        public static string GetNotifiactionTypes = "usp_l_NotificationTypesSelectAll";
+        #endregion
     }
 }

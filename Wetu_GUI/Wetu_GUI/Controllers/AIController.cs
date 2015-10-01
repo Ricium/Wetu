@@ -8,6 +8,8 @@ using Telerik.Web.Mvc;
 
 namespace Wetu_GUI.Controllers
 {
+    [Authorize]
+    [AutoLogOffActionFilter]
     public class AIController : Controller
     {
         private CommonRepository commonRep = new CommonRepository();

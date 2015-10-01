@@ -552,6 +552,55 @@ namespace Wetu_GUI.Models
 
             return ReturnObject;
         }
+
+        public List<UserNotification> GetUserNotifications()
+        {
+            List<UserNotification> ReturnObject = new List<UserNotification>();
+            UserNotification ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            var table = GetCompaniesDBVariable();
+
+            if (table != null)
+            {
+                using (var con = dbConn.SqlConn())
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetAllUserNotifications + " @Companies", con))
+                    {
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new UserNotification();
+                                ins.UserNotificationId = Convert.ToInt32(drI["UserNotificationId"]);
+                                ins._Company = drI["Company"].ToString();
+                                ins._ModifiedBy = drI["ModifiedUser"].ToString();
+                                ins._NotificationType = drI["NotificationTypeDescription"].ToString();
+                                ins._Username = drI["Username"].ToString();
+                                ins.API = drI["API"].ToString();
+                                ins.ModifiedBy = Convert.ToInt32(drI["ModifiedBy"]);
+                                ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                                ins.CompanyId = Convert.ToInt32(drI["CompanyId"]);
+                                ins.NotificationTypeId = Convert.ToInt32(drI["NotificationType"]);
+                                ins.UserId = Convert.ToInt32(drI["UserId"]);
+                                ReturnObject.Add(ins);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
         #endregion
 
         #region Drop Down Lists
@@ -1026,6 +1075,40 @@ namespace Wetu_GUI.Models
                     }
                 }
             }
+
+            return ReturnObject;
+        }
+
+        public List<SelectListItem> GetNotificationTypeDropDown()
+        {
+            List<SelectListItem> ReturnObject = new List<SelectListItem>();
+            SelectListItem ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+            SqlConnection con = dbConn.SqlConn();
+            SqlCommand cmdI = con.CreateCommand();
+            cmdI.Connection = con;
+
+            cmdI.Parameters.Clear();
+            cmdI.CommandText = CommonStrings.GetNotifiactionTypes;
+            cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+            cmdI.Connection.Open();
+
+            SqlDataReader drI = cmdI.ExecuteReader();
+
+            if (drI.HasRows)
+            {
+                while (drI.Read())
+                {
+                    ins = new SelectListItem();
+                    ins.Value = drI["NotificationTypeId"].ToString();
+                    ins.Text = drI["Description"].ToString();
+                    ReturnObject.Add(ins);
+                }
+            }
+
+            cmdI.Connection.Close();
+            con.Dispose();
 
             return ReturnObject;
         }

@@ -9,6 +9,7 @@
         <li><%: Html.ActionLink("Devices", "Index", "Device")%></li>
         <li><%: Html.ActionLink("Users", "Index", "User")%></li>
         <li><%: Html.ActionLink("Data Logs", "Index", "Log")%></li>
+        <li><%: Html.ActionLink("Notifications", "Index", "Notification")%></li>
         <li><%: Html.ActionLink("Artificial Insemination", "Index", "AI")%></li>
         <li><%: Html.ActionLink("Maintenance", "Index", "Maintenance")%></li>
         <li><%: Html.ActionLink("Log Off: " + Page.User.Identity.Name, "LogOff", "Account") %></li>

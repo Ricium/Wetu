@@ -89,5 +89,9 @@ namespace Wetu_GUI.Controllers
             return Json(commonRep.GetInseminationTubesDropDown(), JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult _GetNotificationTypes()
+        {
+            return Json(commonRep.GetNotificationTypeDropDown(), JsonRequestBehavior.AllowGet);
+        }
     }
 }
