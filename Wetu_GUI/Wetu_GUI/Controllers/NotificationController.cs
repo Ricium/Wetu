@@ -22,6 +22,13 @@ namespace Wetu_GUI.Controllers
             return Json(new GridModel(list));
         }
 
+        [GridAction]
+        public JsonResult _ListNotifications()
+        {
+            List<NotificationMessage> list = commonRep.GetNotifications();
+            return Json(new GridModel(list));
+        }
+
         [AcceptVerbs(HttpVerbs.Post)]
         [GridAction]
         public JsonResult _InsertUserNotification(UserNotification ins)

@@ -141,6 +141,8 @@ namespace Wetu_GUI
         public static string DeleteUserNotifications = "usp_t_UserNotificationsDelete";
 
         public static string GetNotifiactionTypes = "usp_l_NotificationTypesSelectAll";
+
+        public static string GetNotifications = "usp_t_NotificationsSelectAll";
         #endregion
     }
 }

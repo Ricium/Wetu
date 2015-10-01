@@ -601,6 +601,50 @@ namespace Wetu_GUI.Models
 
             return ReturnObject;
         }
+
+        public List<NotificationMessage> GetNotifications()
+        {
+            List<NotificationMessage> ReturnObject = new List<NotificationMessage>();
+            NotificationMessage ins;
+
+            DataBaseConnection dbConn = new DataBaseConnection();
+
+            var table = GetCompaniesDBVariable();
+
+            if (table != null)
+            {
+                using (var con = dbConn.SqlConn())
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = new SqlCommand("exec " + CommonStrings.GetNotifications + " @Companies", con))
+                    {
+                        var pList = new SqlParameter("@Companies", SqlDbType.Structured);
+                        pList.TypeName = "dbo.IntList";
+                        pList.Value = table;
+
+                        cmd.Parameters.Add(pList);
+
+                        using (var drI = cmd.ExecuteReader())
+                        {
+                            while (drI.Read())
+                            {
+                                ins = new NotificationMessage();
+                                ins.Company =  drI["Company"].ToString();
+                                ins.Message = drI["Message"].ToString();
+                                ins.NotificationAPI = drI["API"].ToString();
+                                ins.NotificationType = drI["NotificationType"].ToString();
+                                ins.UserNotified = drI["Username"].ToString();
+                                ins.ModifiedDate = Convert.ToDateTime(drI["ModifiedDate"]);
+                                ReturnObject.Add(ins);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ReturnObject;
+        }
         #endregion
 
         #region Drop Down Lists

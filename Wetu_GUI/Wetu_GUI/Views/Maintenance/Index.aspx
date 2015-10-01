@@ -24,6 +24,7 @@
                        });
                }) 
             .SelectedIndex(0)
+            .Effects(ef => ef.Expand().OpenDuration(500).CloseDuration(500))
             .Render();
     %>
 </asp:Content>
