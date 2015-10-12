@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Wetu_Console_Service
 {
-    class AIHistory
+    public class InteractionCount
     {
-        public int TubeId { get; set; }
-        public int MaleId { get; set; }
-        public DateTime AIDate { get; set; }
+        public int AnimalId { get; set; }
+        public int AveragePerDay { get; set; }
+        public int LastPeriod { get; set; }
     }
 }

@@ -10,10 +10,13 @@ using System.Diagnostics;
 using System.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
+using System.Net;
+using System.Configuration;
+using System.IO;
+using System.Net.Mail;
 
 namespace Wetu_Console_Service
 {
-    #region Service Class
     public class Setup
     {
         #region Private Variables
@@ -59,21 +62,21 @@ namespace Wetu_Console_Service
             this.InteractionSensitivity = _InteractionSensitivity;
             this.InteractionTimeSensitivity = _InteractionTimeSensitivity;
 
-            Console.WriteLine("Initializing Log @ " + DateTime.Now.ToString());
+           // Console.WriteLine("Initializing Log @ " + DateTime.Now.ToString());
             this.InitializeLog();
-            Console.WriteLine("Setting Animals @ " + DateTime.Now.ToString());
+           // Console.WriteLine("Setting Animals @ " + DateTime.Now.ToString());
             this.SetAnimals();
-            Console.WriteLine("Setting Lifetime Interactions @ " + DateTime.Now.ToString());
+          //  Console.WriteLine("Setting Lifetime Interactions @ " + DateTime.Now.ToString());
             this.SetAllInteractions();
-            Console.WriteLine("Setting " + this.SocialHistoryDays.ToString() + " Day Interactions @ " + DateTime.Now.ToString());
+           // Console.WriteLine("Setting " + this.SocialHistoryDays.ToString() + " Day Interactions @ " + DateTime.Now.ToString());
             this.SetAllInteractionsLast();
-            Console.WriteLine("Setting Estrous Animals based on Social Groups @ " + DateTime.Now.ToString());
+           // Console.WriteLine("Setting Estrous Animals based on Social Groups @ " + DateTime.Now.ToString());
             this.SetSocialGroups();
             this.SetSocialGroupsLast();
             this.SetEstorusAnimals(this.SocialSensitivity);
-            Console.WriteLine("Setting Interaction Averages @ " + DateTime.Now.ToString());
+           // Console.WriteLine("Setting Interaction Averages @ " + DateTime.Now.ToString());
             this.SetNumberOfInteractions();
-            Console.WriteLine("Setting Interaction Time Averages @ " + DateTime.Now.ToString());
+           // Console.WriteLine("Setting Interaction Time Averages @ " + DateTime.Now.ToString());
             this.SetInteractionTimes();
         }
 
@@ -103,12 +106,13 @@ namespace Wetu_Console_Service
         #endregion
 
         #region Notify Functions
-        public void SendPushBullet(string Message, string _Title)
+        private void SendPushBullet(string Message, string _Title, string API, int UserNotifyId)
         {
             ///TODO: Add Client API Keys in DB
             ///TODO: Retreive Client API Key
 
-            PushbulletClient client = new PushbulletClient("v1Tftuzx00PyhMzoOdJMMbvnrDwUCvz2ZQujvKinowKOW");
+            // v1Tftuzx00PyhMzoOdJMMbvnrDwUCvz2ZQujvKinowKOW
+            PushbulletClient client = new PushbulletClient(API);
 
             var currentUserInformation = client.CurrentUsersInformation();
 
@@ -122,6 +126,159 @@ namespace Wetu_Console_Service
                 };
 
                 PushResponse response = client.PushNote(reqeust);
+
+                LogNotification(UserNotifyId, Message);
+            }
+        }
+
+        private void SendSMS(string Message, string Number, int UserNotifyId)
+        {
+            WebClient client = new WebClient();
+
+            client.Headers.Add("user-agent", "Mozilla/4.0(compatible; MSIE 6.0; Windows NT 5.2; .NET CLR1.0.3705;)");
+
+            try
+            {
+                var appSettings = ConfigurationManager.AppSettings;
+
+                if (appSettings.Count == 0)
+                {
+                    Console.WriteLine("AppSettings is empty.");
+                }
+                else
+                {
+                    //...SMS Details
+                    client.QueryString.Add("user", appSettings["SMSUSER"]);
+                    client.QueryString.Add("password", appSettings["SMSPASS"]);
+                    client.QueryString.Add("api_id", appSettings["SMSAPI"]);
+                    client.QueryString.Add("to", Number);
+                    client.QueryString.Add("text", Message);
+
+                    //...Send SMS
+                    Stream data = client.OpenRead(NotificationTitles.SMS_BASE);
+
+                    //...Check for Errors
+                    StreamReader reader = new StreamReader(data);
+                    string ret = reader.ReadToEnd();
+                    data.Close();
+                    reader.Close();
+
+                    LogNotification(UserNotifyId, Message);
+                }
+            }
+            catch (ConfigurationErrorsException)
+            {
+                Console.WriteLine("Error reading app settings");
+            }
+
+            
+        }
+
+        private void SendEmail(string Message, string Address, int UserNotifyId)
+        {
+            var appSettings = ConfigurationManager.AppSettings;
+
+            MailAddress to = new MailAddress(Address);
+            MailAddress from = new MailAddress(appSettings["EMAIL"]);
+
+            MailMessage mail = new MailMessage(from, to);
+            mail.Subject = "Project Wetu: Estrous Alert";
+            mail.Body = Message;
+
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = "smtp.gmail.com";
+            smtp.Port = 587;
+
+            smtp.Credentials = new NetworkCredential(appSettings["EMAIL"], appSettings["EMAILPASS"]);
+            smtp.EnableSsl = true;
+            smtp.Send(mail);
+
+            LogNotification(UserNotifyId, Message);
+        }
+
+        public void SendNotifications(int AnimalId, string Message, string _Title)
+        {
+            //...Get APIs for AnimalId
+            List<NotificationAPI> NotifyList = new List<NotificationAPI>();
+            NotificationAPI ins;
+
+            SqlConnection sqlConn = DataBaseConnection.SqlConn();
+
+            using (var con = sqlConn)
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("exec notify_GetUserAPIsForAnimal @AnimalId", con))
+                {
+                    cmd.Parameters.AddWithValue("@AnimalId", AnimalId);
+
+                    using (var drI = cmd.ExecuteReader())
+                    {
+                        while (drI.Read())
+                        {
+                            ins = new NotificationAPI();
+                            ins.UserNotificationId = Convert.ToInt32(drI["UserNotificationId"]);
+                            ins.NotificationType = Convert.ToInt32(drI["NotificationType"]);
+                            ins.API = drI["API"].ToString();
+                            NotifyList.Add(ins);
+                        }
+                    }
+                }
+            }
+
+            sqlConn.Close();
+
+            //...Send Notifications
+            foreach(NotificationAPI notify in NotifyList)
+            {
+                switch (notify.NotificationType)
+                {
+                    case LookUpValues.Email:        SendEmail(Message, notify.API, notify.UserNotificationId); break;
+                    case LookUpValues.SMS:          SendSMS(Message, notify.API, notify.UserNotificationId); break;
+                    case LookUpValues.PushBullet:   SendPushBullet(Message, _Title, notify.API, notify.UserNotificationId); break;
+                    default: break;
+                }
+            }
+        }
+
+        private void LogNotification(int UserNotificationId, string Message)
+        {
+            SqlConnection con = DataBaseConnection.SqlConn();
+            con.Open();
+
+            SqlCommand cmdI = con.CreateCommand();
+            SqlTransaction trx = con.BeginTransaction("Add_Notification");
+
+            cmdI.Connection = con;
+            cmdI.Transaction = trx;
+
+            try
+            {
+                cmdI.Parameters.Clear();
+                cmdI.CommandText = "usp_t_NotificationsInsert";
+                cmdI.CommandType = System.Data.CommandType.StoredProcedure;
+                cmdI.Parameters.AddWithValue("@UserNotificationId", UserNotificationId);
+                cmdI.Parameters.AddWithValue("@Message", Message);
+                cmdI.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
+                int ret = (int)cmdI.ExecuteScalar();
+
+                trx.Commit();
+                cmdI.Connection.Close();
+            }
+            catch (SqlException ex)
+            {
+                if (trx != null) trx.Rollback();
+            }
+            finally
+            {
+                if (con.State != ConnectionState.Closed)
+                {
+                    con.Close();
+                }
+
+                con.Dispose();
+                cmdI.Dispose();
+                trx.Dispose();
             }
         }
         #endregion
@@ -190,10 +347,10 @@ namespace Wetu_Console_Service
                 con.Dispose();
             }
 
-            Console.WriteLine("Done Inserting Data in object list @ " + DateTime.Now.ToString());
+            //Console.WriteLine("Done Inserting Data in object list @ " + DateTime.Now.ToString());
             this.AllInteractions = interactionLog;
             this.SetInteractions();
-            Console.WriteLine("Done Processing List @ " + DateTime.Now.ToString());
+            //Console.WriteLine("Done Processing List @ " + DateTime.Now.ToString());
         }
 
         private void SetInteractions()
@@ -267,10 +424,10 @@ namespace Wetu_Console_Service
                 con.Dispose();
             }
 
-            Console.WriteLine("Done Inserting Data in object list @ " + DateTime.Now.ToString());
+            //Console.WriteLine("Done Inserting Data in object list @ " + DateTime.Now.ToString());
             this.AllInteractionsLast = interactionLog;
             this.SetInteractionsLast();
-            Console.WriteLine("Done Processing List @ " + DateTime.Now.ToString());
+            //Console.WriteLine("Done Processing List @ " + DateTime.Now.ToString());
         }        
 
         private void SetInteractionsLast()
@@ -338,7 +495,7 @@ namespace Wetu_Console_Service
                 con.Dispose();
             }
 
-            Console.WriteLine("Done Inserting Interactions in object list @ " + DateTime.Now.ToString());
+            //Console.WriteLine("Done Inserting Interactions in object list @ " + DateTime.Now.ToString());
             this.NumberOfInteractions = interactionLog;
         }
 
@@ -380,7 +537,7 @@ namespace Wetu_Console_Service
                 con.Dispose();
             }
 
-            Console.WriteLine("Done Inserting Interaction Times in object list @ " + DateTime.Now.ToString());
+            //Console.WriteLine("Done Inserting Interaction Times in object list @ " + DateTime.Now.ToString());
             this.TimeOfInteractions = interactionLog;
         }
         #endregion
@@ -667,105 +824,5 @@ namespace Wetu_Console_Service
         }
         #endregion        
     }
-    #endregion
-
-    #region Interaction Classes
-    public class InteractionLog
-    {
-        public InteractionLog()
-        {
-            this.Interactions = new List<Interaction>();
-        }
-
-        public InteractionLog(int _AnimalId)
-        {
-            this.AnimalId = _AnimalId;
-            this.Interactions = new List<Interaction>();
-        }
-
-        public int AnimalId { get; set; }
-        public List<Interaction> Interactions { get; set; }
-    }
-
-    public class Interaction
-    {
-        public Interaction()
-        {
-        }
-
-        public Interaction(int _AnimalId, int _NumberOfInteractions, int _TotalSecondsConnected)
-        {
-            this.AnimalId = _AnimalId;
-            this.NumberOfInteractions = _NumberOfInteractions;
-            this.TotalSecondsConnected = _TotalSecondsConnected;
-            this.AverageConnectionTime = (double)this.TotalSecondsConnected / (double)this.NumberOfInteractions;
-        }
-
-        public int AnimalId { get; set; }
-        public int NumberOfInteractions { get; set; }
-        public int TotalSecondsConnected { get; set; }
-        public double AverageConnectionTime { get; set; }
-    }
-
-    public class InteractionDB
-    {
-        public int AnimalConnected { get; set; }
-        public Interaction InterAct { get; set; }
-        public int AnimalInProx { get; set; }
-        public int NumberInteractions { get; set; }
-        public int TimeInteracted { get; set; }
-    }
-
-    public class InteractionCount
-    {
-        public int AnimalId { get; set; }
-        public int AveragePerDay { get; set; }
-        public int LastPeriod { get; set; }
-    }
-    #endregion
-
-    #region Social Group
-    public class SocialGroup
-    {
-        public int AnimalId { get; set; }
-        public List<int> AnimalsInGroup { get; set; }
-    }
-    #endregion
-
-    #region Static Strings
-    public struct EventCategories
-    {
-        public static short SERVICE_EVENT = 1;
-        public static short DATABASE_EVENT = 2;
-        public static short NOTIFICATION_EVENT = 3;
-    }
-
-    public struct EventSources
-    {
-        public static string SOURCE = "WetuLog";
-        public static string LOG = "WetuLog";
-    }
-
-    public struct LogMessages
-    {
-        public static string START_SERVICE = "Wetu Service Started";
-        public static string STOP_SERVICE = "Wetu Service Stopped";
-        public static string NOTIFY = "Wetu Service sent notification via Push Bullet";
-    }
-
-    public struct NotificationTitles
-    {
-        public static string WELCOME_MESSAGE = "Welcome to Wetu's Pushbullet Service";
-        public static string ESTROUS_MESSAGE = "Estrous Alert";
-    }
-
-    public struct EventTypes
-    {
-        public static EventLogEntryType Information = EventLogEntryType.Information;
-        public static EventLogEntryType Error = EventLogEntryType.Error;
-        public static EventLogEntryType Warning = EventLogEntryType.Warning;
-    }
-    #endregion
-
-    
+   
 }

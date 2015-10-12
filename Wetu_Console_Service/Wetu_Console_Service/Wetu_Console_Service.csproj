@@ -46,14 +46,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AIHistory.cs" />
-    <Compile Include="BirthHistory.cs" />
-    <Compile Include="DatabaseConnection.cs" />
-    <Compile Include="ManagementService.cs" />
+    <Compile Include="Classes\AIHistory.cs" />
+    <Compile Include="Classes\BirthHistory.cs" />
+    <Compile Include="AppCode\DatabaseConnection.cs" />
+    <Compile Include="Classes\Interaction.cs" />
+    <Compile Include="Classes\InteractionCount.cs" />
+    <Compile Include="Classes\InteractionDB.cs" />
+    <Compile Include="Classes\InteractionLog.cs" />
+    <Compile Include="Classes\ManagementService.cs" />
+    <Compile Include="Classes\NotificationAPI.cs" />
+    <Compile Include="Classes\SocialGroup.cs" />
+    <Compile Include="Classes\SocialGroupMales.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SocialGroupObject.cs" />
-    <Compile Include="UserObjects.cs" />
+    <Compile Include="Classes\SocialGroupObject.cs" />
+    <Compile Include="StaticReferences\StaticReferences.cs" />
+    <Compile Include="Classes\Setup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

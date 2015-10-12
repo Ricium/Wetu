@@ -13,5 +13,6 @@ namespace Wetu_Console_Service
         public int TubeUsed { get; set; }
         public bool Success { get; set; }
         public DateTime BirthDate { get; set; }
+        public string MaleTag { get; set; }
     }
 }
