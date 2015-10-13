@@ -69,6 +69,7 @@ namespace Wetu_Console_Service
                     manage = new ManagementService(animal);
                     string Message = manage.ManageAnimal();
                     Console.WriteLine(Message);
+                    Console.WriteLine("");
 
                     //...Notify
                     Service.SendNotifications(animal, Message, NotificationTitles.ESTROUS_MESSAGE);

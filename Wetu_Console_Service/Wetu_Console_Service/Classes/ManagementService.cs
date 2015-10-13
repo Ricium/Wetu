@@ -64,6 +64,7 @@ namespace Wetu_Console_Service
 
                 //...Check Birth Success
                 double SuccessRatio = this.GetBirthSuccessRatio();
+                double BirthCount = this.GetBirthRatio();
 
                 //...If Success is LOW
                 if (SuccessRatio <= 60)
@@ -71,18 +72,28 @@ namespace Wetu_Console_Service
                     //...Check Family Genetics
                     double FamilySuccess = this.GetFamilySuccessRatio();
 
-                    if (FamilySuccess <= 50)
+                    //...Check if Genetics Exists
+                    if (FamilySuccess == 999)
                     {
-                        //...Bad Genetics
-                        retString = String.Format(ManagementMessages.UnderPerformance, this.AnimalTag, SuccessRatio, FamilySuccess);
+                        //...No Genetics
+                        retString = String.Format(ManagementMessages.UnderPerformanceNoFamily, this.AnimalTag, SuccessRatio/100, BirthCount);
                         return retString;
                     }
                     else
                     {
-                        //...Good Genetics
-                        retString = String.Format(ManagementMessages.UnderPerformanceFamily, this.AnimalTag, SuccessRatio, FamilySuccess);
-                        return retString;
-                    }
+                        if (FamilySuccess <= 50)
+                        {
+                            //...Bad Genetics
+                            retString = String.Format(ManagementMessages.UnderPerformance, this.AnimalTag, SuccessRatio/100, BirthCount, FamilySuccess);
+                            return retString;
+                        }
+                        else
+                        {
+                            //...Good Genetics
+                            retString = String.Format(ManagementMessages.UnderPerformanceFamily, this.AnimalTag, SuccessRatio/100, BirthCount, FamilySuccess);
+                            return retString;
+                        }
+                    }                    
                 }
                 else
                 {
@@ -279,7 +290,7 @@ namespace Wetu_Console_Service
                         while (drI.Read())
                         {
                             ins = new SocialGroupMales();
-                            ins.MaleId = Convert.ToInt32(drI["AnimalInProximity"]);
+                            ins.MaleId = Convert.ToInt32(drI["AnimalId"]);
                             ins.Tag = drI["TagNumber"].ToString();
 
                             this.LastSocialGroupMales.Add(ins);
@@ -308,12 +319,17 @@ namespace Wetu_Console_Service
                     }
                 }
 
-                return successCount / this.BirthHistories.Count;
+                return successCount / (double)this.BirthHistories.Count * 100;
             }
             else
             {
                 return successCount;
             } 
+        }
+
+        private double GetBirthRatio()
+        {
+            return (double)this.BirthHistories.Count;
         }
 
         private double GetFamilySuccessRatio()

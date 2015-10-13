@@ -73,12 +73,16 @@ namespace Wetu_Console_Service
                                         + "She gave birth less than 55 days ago.";
 
         public static string UnderPerformance = "Animal: {0} shows Estrous Behaviour but is underperforming in birthing.\n"
-                                        + "She show a BSR of: {1}% compared to a GBSR of: {2}%.\n"
+                                        + "She shows a BSR of: {1}:{2} compared to a GBSR of: {3}%.\n"
                                         + "AI is not recommended, please take own course of action.";
 
         public static string UnderPerformanceFamily = "Animal: {0} shows Estrous Behaviour but is underperforming in birthing, although the bloodline shows good birthing success.\n"
-                                        + "She show a BSR of: {1}% compared to a GBSR of: {2}%.\n"
+                                        + "She shows a BSR of: {1}:{2} compared to a GBSR of: {3}%.\n"
                                         + "Either AI or NI with any available male is recommended.";
+
+        public static string UnderPerformanceNoFamily = "Animal: {0} shows Estrous Behaviour but is underperforming in birthing.\n"
+                                        + "She shows a BSR of: {1}:{2} and no Genetic History Data exists.\n"
+                                        + "Either AI or NI can be used, own course of action is recommended.";
 
         public static string RecommendAI = "Animal: {0} shows Estrous Behaviour.\n"
                                             + "Historically she has had the most success with AI.\n"
