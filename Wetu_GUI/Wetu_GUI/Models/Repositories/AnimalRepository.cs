@@ -96,13 +96,13 @@ namespace Wetu_GUI.Models
             con.Dispose();
 
             DateTime EndDate = DateTime.Now;
-            DateTime StartDate = EndDate.AddDays(-2);
+            DateTime StartDate = EndDate.AddDays(-1);
 
             ins.LifetimeSocialGroup = GetAnimalSocialGroup(ins.AnimalId);
             ins.RecentSocialGroup = GetAnimalSocialGroup(ins.AnimalId, StartDate, EndDate);
 
             ins = GetAnimalInteractions(ins);
-            ins = IsAnimalShowingEstrousBehaviour(ins, 2, 5, 5);
+            ins = IsAnimalShowingEstrousBehaviour(ins, 2, 5, 3);
 
             ins.Age = DateTime.Today.Year - ins.BirthDate.Year;
             if (ins.BirthDate > DateTime.Today.AddYears(-ins.Age)) ins.Age--;

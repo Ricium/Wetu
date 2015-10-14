@@ -16,9 +16,9 @@ namespace Wetu_Console_Service
         {
             //...Set Data Senisitivity
             int Sensitivity = 2;
-            int SocialHistoryDays = 2;
+            int SocialHistoryDays = 1;
             int InteractionSensitivity = 5;
-            int InteractionTimeSensitivity = 2;
+            int InteractionTimeSensitivity = 3;
 
             Console.WriteLine("-----------------------------------------------------");
             Console.WriteLine("Project Wetu: Estrous Behaviour Processor");
@@ -63,13 +63,13 @@ namespace Wetu_Console_Service
 
             if(MostLikeyEstrous.Count > 0)
             {
+                Console.WriteLine(MostLikeyEstrous.Count.ToString() + " Animal show Estrous Behaviour");
+
                 ManagementService manage;
                 foreach(int animal in MostLikeyEstrous)
                 {
                     manage = new ManagementService(animal);
                     string Message = manage.ManageAnimal();
-                    Console.WriteLine(Message);
-                    Console.WriteLine("");
 
                     //...Notify
                     Service.SendNotifications(animal, Message, NotificationTitles.ESTROUS_MESSAGE);
