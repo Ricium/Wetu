@@ -7,7 +7,7 @@
 #include "string_functions.h"
 
 #define GetInstructionClock()  (8000000)
-#define MAXBUF                  10//350
+#define MAXBUF                  350
 #define BAUDRATE9600            25
 #define BAUDRATE19200           12
 #define ADDRBUF                 15
@@ -80,12 +80,14 @@ void __attribute__((interrupt, no_auto_psv, shadow)) _U2RXInterrupt(void) {
 
 void set_name(void)
 {
-    SendXBee("+++");
-    DelayMs(1000);
+    char test[] = { 0x2b, 0x2b, 0x2b };
+    SendXBee(test);
+    DelayMs(503);
     SendXBee("ATSL\r");
-    DelayMs(1000);
+    DelayMs(503);
     SendXBee("ATCN\r");
  
+    DelayMs(500);
     char * rc;    
     rc = strchr(devaddress, '\r');
     int start = rc-devaddress+1;
@@ -97,8 +99,7 @@ void set_Wifi(void)
     DisableWiFi();
     SendWiFi("AT+CWMODE=3\r\n");
     DelayMs(1000);
-    //char test[] = { 0x41, 0x54,0x2b, 0x43, 0x57, 0x53, 0x41, 0x50, 0x3d, 0x22, 0x31, 0x41, 0x33, 0x42, 0x35, 0x44, 0x37, 0x41, 0x22, 0x2c, 0x22, 0x22, 0x2c, 0x31, 0x2c, 0x30, 0x0D, 0x0A };
-    //SendWiFi(test);
+
     char pre[] = { 0x41, 0x54, 0x2b, 0x43, 0x57, 0x53, 0x41, 0x50, 0x3d, 0x22 };
     SendWiFi(pre);
     DelayMs(500);
@@ -111,24 +112,19 @@ void set_Wifi(void)
 }
 
 int main(void)
-{
+{   
     clear_data_buffer(address,&xbeecount);
     clear_data_buffer(devaddress, &xbeecount);
-    
-    SetupXBee(BAUDRATE19200); 
-    //DelayMs(1000);
-    //set_name();
-    
-    //DelayMs(200);
-    SetupWiFi(BAUDRATE9600);
-    //set_Wifi();
     SetupADC();
     
+    SetupXBee(BAUDRATE19200);
+    SetupWiFi(BAUDRATE9600);
+         
     clear_data_buffer(databuf, &bufcount);
     
-
+    DelayMs(5000);
     WaitXBee();
-    PollProximity();
+    PollProximity();  
     
     char x, y, z;
     
@@ -152,6 +148,14 @@ int main(void)
             
             EnableWiFi(); 
             PollProximity();
+        }
+        else
+        {
+            DelayMs(1000);
+            if(IFS0bits.U1RXIF == 0)
+            {
+                PollProximity();
+            }            
         }
     };
 }

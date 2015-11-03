@@ -46,3 +46,5 @@ C:\dev\Wetu\Wetu_GUI\Wetu_GUI\obj\Debug\Wetu_GUI.pdb
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\PushbulletSharp.dll
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\PushbulletSharp.pdb
 C:\dev\Wetu\Wetu_GUI\Wetu_GUI\obj\Debug\Wetu_GUI.csprojResolveAssemblyReference.cache
+C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\Wetu_GUI.dll.CodeAnalysisLog.xml
+C:\dev\Wetu\Wetu_GUI\Wetu_GUI\bin\Wetu_GUI.dll.lastcodeanalysissucceeded

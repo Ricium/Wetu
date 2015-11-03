@@ -1,6 +1,6 @@
 /* 
  * File:   configbits.h
- * Author: User
+ * Author: RM Lombard
  *
  * Created on 15 June 2015, 12:55 PM
  */
@@ -61,7 +61,7 @@ extern "C" {
 #pragma config MCLRE = ON               // MCLR Pin Enable bit (MCLR pin enabled; RA5 input pin disabled)
 
 // FICD
-#pragma config ICS = PGx1               // ICD Pin Placement Select bits (PGC1/PGD1 are used for programming and debugging the device)
+#pragma config ICS = PGx3               // ICD Pin Placement Select bits (PGC1/PGD1 are used for programming and debugging the device)
 
 // FDS
 #pragma config DSWDTPS = DSWDTPSF       // Deep Sleep Watchdog Timer Postscale Select bits (1:2,147,483,648 (25.7 Days))
